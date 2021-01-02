@@ -1,7 +1,7 @@
 package beans;
 
 public class TipKupca {
-	public enum ImeTipa {ZLATNI, SREBRNI, BRONZANI}
+	public enum ImeTipa {ZLATNI, SREBRNI, BRONZANI, ZELENI}
 	private ImeTipa imeTipa;
 	private int popust;
 	private int trazeniBrojBodova;

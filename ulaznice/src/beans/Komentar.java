@@ -5,6 +5,7 @@ public class Komentar {
 	private int idManifestacije;
 	private String tekst;
 	private int ocena;
+	private boolean odobren;
 	
 	public Komentar() {
 	}
@@ -14,6 +15,7 @@ public class Komentar {
 		this.idManifestacije = idManifestacije;
 		this.tekst = tekst;
 		this.ocena = ocena;
+		this.odobren = false;
 	}
 
 	public String getKupac() {
@@ -46,6 +48,14 @@ public class Komentar {
 
 	public void setOcena(int ocena) {
 		this.ocena = ocena;
+	}
+
+	public boolean isOdobren() {
+		return odobren;
+	}
+
+	public void setOdobren(boolean odobren) {
+		this.odobren = odobren;
 	}
 	
 }

@@ -3,14 +3,17 @@ package beans;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.json.bind.annotation.JsonbDateFormat;
+
 public class Korisnik {
 	public enum Pol {M, Z}
 	public enum Uloga {ADMIN, PRODAVAC, KUPAC}
 	private String korisnickoIme, lozinka, ime, prezime;
 	private Pol pol;
+	@JsonbDateFormat(JsonbDateFormat.TIME_IN_MILLIS)
 	private Date datumRodjenja;
 	private Uloga uloga;
-	private ArrayList<Manifestacija> manifestacije;	// ako je Prodavac
+	private ArrayList<Integer> manifestacije;	// id-ovi manifestacija; ako je Prodavac
 	private boolean blokiran;
 	
 	public Korisnik() {
@@ -84,11 +87,11 @@ public class Korisnik {
 		this.uloga = uloga;
 	}
 
-	public ArrayList<Manifestacija> getManifestacije() {
+	public ArrayList<Integer> getManifestacije() {
 		return manifestacije;
 	}
 
-	public void setManifestacije(ArrayList<Manifestacija> manifestacije) {
+	public void setManifestacije(ArrayList<Integer> manifestacije) {
 		this.manifestacije = manifestacije;
 	}
 

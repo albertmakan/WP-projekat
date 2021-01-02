@@ -2,10 +2,13 @@ package beans;
 
 import java.time.LocalDateTime;
 
+import javax.json.bind.annotation.JsonbDateFormat;
+
 public class Karta {
 	public enum TipKarte {VIP, REGULAR, FAN_PIT}
 	private String id;	// 10 karaktera
 	private int idManifestacije;
+	@JsonbDateFormat(JsonbDateFormat.TIME_IN_MILLIS)
 	private LocalDateTime datumVreme;
 	private float cena;
 	private String kupac;	// ime i prezime

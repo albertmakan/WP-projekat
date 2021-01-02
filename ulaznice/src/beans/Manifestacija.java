@@ -1,12 +1,14 @@
 package beans;
 
 import java.time.LocalDateTime;
+import javax.json.bind.annotation.JsonbDateFormat;
 
 public class Manifestacija {
 	private int id;
 	private String naziv;
 	private String tip;
 	private int brojMesta;
+	@JsonbDateFormat(JsonbDateFormat.TIME_IN_MILLIS)
 	private LocalDateTime datumVreme;
 	private float cenaKarte;
 	private boolean aktivna;
@@ -17,14 +19,14 @@ public class Manifestacija {
 	}
 	
 	public Manifestacija(int id, String naziv, String tip, int brojMesta, LocalDateTime datumVreme, float cenaKarte,
-			boolean aktivna, Lokacija lokacija) {
+			Lokacija lokacija) {
 		this.id = id;
 		this.naziv = naziv;
 		this.tip = tip;
 		this.brojMesta = brojMesta;
 		this.datumVreme = datumVreme;
 		this.cenaKarte = cenaKarte;
-		this.aktivna = aktivna;
+		this.aktivna = false;
 		this.lokacija = lokacija;
 	}
 
