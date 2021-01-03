@@ -1,14 +1,12 @@
 package dao;
 
-import java.io.FileNotFoundException;
+import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import javax.json.bind.Jsonb;
-import javax.json.bind.JsonbBuilder;
-import javax.json.bind.JsonbException;
 
 import beans.Komentar;
 
@@ -17,16 +15,23 @@ public class KomentarDAO {
 	private String putanjaFajla;
 	
 	public KomentarDAO(String contextPath) {
-		putanjaFajla = contextPath+"/data/komentari.json";
+		komentari = new HashMap<Integer, ArrayList<Komentar>>();
+		putanjaFajla = contextPath+"/data/komentari.csv";
 		ucitajKomentare();
 	}
 
 	private void ucitajKomentare() {
-		Jsonb jsonb = JsonbBuilder.create();
-		try {
-			komentari = jsonb.fromJson(new FileReader(putanjaFajla), new HashMap<Integer, ArrayList<Komentar>>(){
-				private static final long serialVersionUID = 1L;}.getClass().getGenericSuperclass());
-		} catch (JsonbException | FileNotFoundException e) {
+		try (BufferedReader br = new BufferedReader(new FileReader(putanjaFajla))) {
+			String line;
+			while ((line = br.readLine()) != null) {
+				String[] tokens = line.split(";");
+				Komentar komentar = new Komentar(tokens[0], Integer.parseInt(tokens[1]), tokens[2], Integer.parseInt(tokens[3]));
+				komentar.setOdobren(tokens[4].equals("o"));
+				if (komentari.get(komentar.getIdManifestacije()) == null)
+					komentari.put(komentar.getIdManifestacije(), new ArrayList<Komentar>());
+				komentari.get(komentar.getIdManifestacije()).add(komentar);
+			}
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -38,21 +43,18 @@ public class KomentarDAO {
 	public Komentar dodajKomentar(String kupac, int idManifestacije, String tekst, int ocena) {
 		Komentar komentar = new Komentar(kupac, idManifestacije, tekst, ocena);
 		komentari.get(idManifestacije).add(komentar);
-		sacuvajKomentare();
+		sacuvajKomentar(komentar);
 		return komentar;
 	}
 
-	private void sacuvajKomentare() {
-		Jsonb jsonb = JsonbBuilder.create();
-		PrintWriter pw = null;
+	private void sacuvajKomentar(Komentar k) {
 		try {
-			pw = new PrintWriter(putanjaFajla);
-			pw.write(jsonb.toJson(komentari));
-		} catch (FileNotFoundException e) {
+			PrintWriter out = new PrintWriter(new FileWriter(putanjaFajla, true));
+			out.println(k.getKupac()+';'+k.getIdManifestacije()+';'+k.getTekst()+';'+k.getOcena()+(k.isOdobren()? ";o":";n"));
+			out.close();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		if (pw != null)
-			pw.close();
 	}
 	
 	

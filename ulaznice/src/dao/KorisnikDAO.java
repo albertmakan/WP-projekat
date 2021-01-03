@@ -46,6 +46,13 @@ public class KorisnikDAO {
 		}
 	}
 	
+	public boolean postoji(String korisnickoIme, String lozinka) {
+		Korisnik k = korisnici.get(korisnickoIme);
+		if (k != null)
+			return k.getLozinka().equals(lozinka);
+		return false;
+	}
+	
 	public Korisnik registracijaProdavca(String ime, String prezime, String korisnickoIme, String lozinka, Pol pol, Date datumRodjenja) {
 		Korisnik p = new Korisnik(korisnickoIme, lozinka, korisnickoIme, prezime, pol, datumRodjenja, Uloga.PRODAVAC);
 		sacuvajKorisnika(p);

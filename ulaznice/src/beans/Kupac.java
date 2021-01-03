@@ -27,6 +27,10 @@ public class Kupac extends Korisnik {
 	public void setSveKarte(ArrayList<String> sveKarte) {
 		this.sveKarte = sveKarte;
 	}
+	
+	public void addKarta(String idKarte) {
+		sveKarte.add(idKarte);
+	}
 
 	public int getBodovi() {
 		return bodovi;

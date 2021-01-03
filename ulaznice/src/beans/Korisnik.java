@@ -28,6 +28,10 @@ public class Korisnik {
 		this.pol = pol;
 		this.datumRodjenja = datumRodjenja;
 		this.uloga = uloga;
+		if (uloga == Uloga.PRODAVAC)
+			manifestacije = new ArrayList<Integer>();
+		else
+			manifestacije = null;
 		this.blokiran = false;
 	}
 

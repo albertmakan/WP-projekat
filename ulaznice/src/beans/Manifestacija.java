@@ -8,6 +8,7 @@ public class Manifestacija {
 	private String naziv;
 	private String tip;
 	private int brojMesta;
+	private int brojKarata;
 	@JsonbDateFormat(JsonbDateFormat.TIME_IN_MILLIS)
 	private LocalDateTime datumVreme;
 	private float cenaKarte;
@@ -24,6 +25,7 @@ public class Manifestacija {
 		this.naziv = naziv;
 		this.tip = tip;
 		this.brojMesta = brojMesta;
+		this.brojKarata = brojMesta;
 		this.datumVreme = datumVreme;
 		this.cenaKarte = cenaKarte;
 		this.aktivna = false;
@@ -60,6 +62,14 @@ public class Manifestacija {
 
 	public void setBrojMesta(int brojMesta) {
 		this.brojMesta = brojMesta;
+	}
+
+	public int getBrojKarata() {
+		return brojKarata;
+	}
+
+	public void setBrojKarata(int brojKarata) {
+		this.brojKarata = brojKarata;
 	}
 
 	public LocalDateTime getDatumVreme() {

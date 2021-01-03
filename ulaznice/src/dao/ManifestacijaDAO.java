@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 import javax.json.bind.Jsonb;
@@ -16,17 +18,21 @@ import beans.Manifestacija;
 public class ManifestacijaDAO {
 	private HashMap<Integer, Manifestacija> manifestacije;
 	private String putanjaFajla;
+	private String putanjaPostera;
 	
 	public ManifestacijaDAO(String contextPath) {
 		putanjaFajla = contextPath+"/data/manifestacije.json";
+		putanjaPostera = contextPath+"/data/posteri";
 		ucitajManifestacije();
 	}
 
 	private void ucitajManifestacije() {
 		Jsonb jsonb = JsonbBuilder.create();
 		try {
-			manifestacije = jsonb.fromJson(new FileReader(putanjaFajla), new HashMap<Integer, Manifestacija>(){
+			ArrayList<Manifestacija> sveManifestacije = jsonb.fromJson(new FileReader(putanjaFajla), new ArrayList<Manifestacija>(){
 				private static final long serialVersionUID = 1L;}.getClass().getGenericSuperclass());
+			for (Manifestacija manifestacija : sveManifestacije)
+				manifestacije.put(manifestacija.getId(), manifestacija);
 		} catch (JsonbException | FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -34,6 +40,10 @@ public class ManifestacijaDAO {
 	
 	public Manifestacija getManifestacija(int id) {
 		return manifestacije.get(id);
+	}
+	
+	public Collection<Manifestacija> getManifestacije() {
+		return manifestacije.values();
 	}
 	
 	public Manifestacija kreirajManifestaciju(int id, String naziv, String tip, int brojMesta, LocalDateTime datumVreme, float cenaKarte,
@@ -44,17 +54,21 @@ public class ManifestacijaDAO {
 		return m;
 	}
 	
-	private void sacuvajManifestacije() {
+	public void sacuvajManifestacije() {
 		Jsonb jsonb = JsonbBuilder.create();
 		PrintWriter pw = null;
 		try {
 			pw = new PrintWriter(putanjaFajla);
-			pw.write(jsonb.toJson(manifestacije));
+			pw.write(jsonb.toJson(manifestacije.values()));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 		if (pw != null)
 			pw.close();
+	}
+
+	public String getPutanjaPostera() {
+		return putanjaPostera;
 	}
 	
 	
