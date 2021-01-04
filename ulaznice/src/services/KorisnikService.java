@@ -11,6 +11,7 @@ import javax.ws.rs.core.MediaType;
 
 import beans.Korisnik;
 import beans.Kupac;
+import beans.Prodavac;
 import dao.KorisnikDAO;
 
 @Path("/korisnici")
@@ -33,6 +34,14 @@ public class KorisnikService {
 	public Kupac getKupac(@PathParam("korisnickoIme") String korIme) {
 		KorisnikDAO dao = (KorisnikDAO) ctx.getAttribute("korisnikDAO");
 		return (Kupac) dao.getKorisnik(korIme);
+	}
+	
+	@GET
+	@Path("/prodavac/{korisnickoIme}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Prodavac getProdavac(@PathParam("korisnickoIme") String korIme) {
+		KorisnikDAO dao = (KorisnikDAO) ctx.getAttribute("korisnikDAO");
+		return (Prodavac) dao.getKorisnik(korIme);
 	}
 	
 	@GET

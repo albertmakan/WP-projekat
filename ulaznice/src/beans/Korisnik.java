@@ -1,6 +1,5 @@
 package beans;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 import javax.json.bind.annotation.JsonbDateFormat;
@@ -13,7 +12,6 @@ public class Korisnik {
 	@JsonbDateFormat(JsonbDateFormat.TIME_IN_MILLIS)
 	private Date datumRodjenja;
 	private Uloga uloga;
-	private ArrayList<Integer> manifestacije;	// id-ovi manifestacija; ako je Prodavac
 	private boolean blokiran;
 	
 	public Korisnik() {
@@ -28,10 +26,6 @@ public class Korisnik {
 		this.pol = pol;
 		this.datumRodjenja = datumRodjenja;
 		this.uloga = uloga;
-		if (uloga == Uloga.PRODAVAC)
-			manifestacije = new ArrayList<Integer>();
-		else
-			manifestacije = null;
 		this.blokiran = false;
 	}
 
@@ -89,14 +83,6 @@ public class Korisnik {
 
 	public void setUloga(Uloga uloga) {
 		this.uloga = uloga;
-	}
-
-	public ArrayList<Integer> getManifestacije() {
-		return manifestacije;
-	}
-
-	public void setManifestacije(ArrayList<Integer> manifestacije) {
-		this.manifestacije = manifestacije;
 	}
 
 	public boolean isBlokiran() {

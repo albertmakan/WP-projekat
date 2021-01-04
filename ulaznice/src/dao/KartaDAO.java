@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 import javax.json.bind.Jsonb;
@@ -37,14 +38,14 @@ public class KartaDAO {
 		}
 	}
 	
-	public ArrayList<Karta> getKarte(Kupac k) {
+	public Collection<Karta> getKarte(Kupac k) {
 		ArrayList<Karta> karteKupca = new ArrayList<Karta>();
 		for (String id : k.getSveKarte())
 			karteKupca.add(karte.get(id));
 		return karteKupca;
 	}
 	
-	public ArrayList<Karta> getKarte(int idManifestacije) {
+	public Collection<Karta> getKarte(int idManifestacije) {
 		ArrayList<Karta> karteManifestacije = new ArrayList<Karta>();
 		for (Karta karta : karte.values())
 			if (karta.getIdManifestacije() == idManifestacije)
@@ -57,24 +58,25 @@ public class KartaDAO {
 	}
 	
 	// posle poziva ove metode potrebno je sacuvati kupca i manifestacije
-	public Karta rezervacijaKarte(Kupac kupac, Manifestacija manifestacija, TipKarte tip) {
+	public void rezervacijaKarata(Kupac kupac, Manifestacija manifestacija, TipKarte tip, int kom) {
 		int len = (""+manifestacija.getBrojMesta()).length();
-		String id = manifestacija.getNaziv().substring(0, 10-len).toUpperCase().replace(' ', '_')
-				+ String.format("%0"+len+"d", manifestacija.getBrojMesta()-manifestacija.getBrojKarata());
 		float cena = manifestacija.getCenaKarte();
 		if (tip == TipKarte.FAN_PIT)
 			cena *= 2;
 		else if (tip == TipKarte.VIP)
 			cena *= 4;
 		cena -= kupac.getTip().getPopust()*cena;
-		Karta karta = new Karta(id, manifestacija.getId(), manifestacija.getDatumVreme(), cena, kupac.getIme()+" "+kupac.getPrezime(), false, tip);
-		karte.put(karta.getId(), karta);
-		kupac.addKarta(karta.getId());
-		manifestacija.setBrojKarata(manifestacija.getBrojKarata()-1);
-		int brojBodova = (int) (cena/1000*133);
+		for (int i = 0; i < kom; i++) {
+			String id = manifestacija.getNaziv().substring(0, 10-len).toUpperCase().replace(' ', '_')
+					+ String.format("%0"+len+"d", manifestacija.getBrojMesta()-manifestacija.getBrojKarata());
+			Karta karta = new Karta(id, manifestacija.getId(), manifestacija.getDatumVreme(), cena, kupac.getIme()+" "+kupac.getPrezime(), false, tip);
+			karte.put(karta.getId(), karta);
+			kupac.addKarta(karta.getId());
+			manifestacija.setBrojKarata(manifestacija.getBrojKarata()-1);
+			sacuvajKartu(karta);
+		}
+		int brojBodova = (int) (kom*cena/1000*133);
 		kupac.setBodovi(kupac.getBodovi()+brojBodova);
-		sacuvajKartu(karta);
-		return karta;
 	}
 	
 	// posle poziva ove metode potrebno je sacuvati kupca

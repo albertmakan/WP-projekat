@@ -3,8 +3,6 @@ package beans;
 import java.util.ArrayList;
 import java.util.Date;
 
-import beans.TipKupca.ImeTipa;
-
 public class Kupac extends Korisnik {
 	private ArrayList<String> sveKarte;	// identifikatori karata
 	private int bodovi;
@@ -17,7 +15,7 @@ public class Kupac extends Korisnik {
 		super(korisnickoIme, lozinka, ime, prezime, pol, datumRodjenja, Uloga.KUPAC);
 		this.sveKarte = new ArrayList<String>();
 		this.bodovi = 0;
-		this.tip = new TipKupca(ImeTipa.ZELENI, 0, 2000);
+		this.tip = null;
 	}
 
 	public ArrayList<String> getSveKarte() {

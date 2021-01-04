@@ -17,7 +17,9 @@ import javax.ws.rs.core.MediaType;
 import beans.Komentar;
 import beans.Kupac;
 import beans.Manifestacija;
+import beans.Prodavac;
 import dao.KomentarDAO;
+import dao.KorisnikDAO;
 import dao.ManifestacijaDAO;
 
 @Path("/manifestacije")
@@ -40,9 +42,23 @@ public class ManifestacijeService {
 	@Path("/nova")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Manifestacija kreirajManifestaciju(Manifestacija m) {
+	public Manifestacija kreirajManifestaciju(@Context HttpServletRequest request, Manifestacija m) {
 		ManifestacijaDAO dao = (ManifestacijaDAO) ctx.getAttribute("manifestacijaDAO");
-		return dao.kreirajManifestaciju(m.getId(), m.getNaziv(), m.getTip(), m.getBrojMesta(), m.getDatumVreme(), m.getCenaKarte(), m.getLokacija());
+		KorisnikDAO korisnikDao = (KorisnikDAO) ctx.getAttribute("korisnikDAO");
+		Prodavac prodavac = (Prodavac) request.getSession().getAttribute("korisnik");
+		Manifestacija manifestacija = dao.kreirajManifestaciju(prodavac, m.getNaziv(), m.getTip(), m.getBrojMesta(), m.getDatumVreme(), m.getCenaKarte(), m.getLokacija());
+		korisnikDao.sacuvajKorisnika(prodavac);
+		return manifestacija;
+	}
+	
+	@GET
+	@Path("/moje")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<Manifestacija> getManifestacije(@Context HttpServletRequest request) {
+		Prodavac prodavac = (Prodavac) request.getSession().getAttribute("korisnik");
+		ManifestacijaDAO dao = (ManifestacijaDAO) ctx.getAttribute("manifestacijaDAO");
+		return dao.getManifestacije(prodavac);
 	}
 	
 	@GET

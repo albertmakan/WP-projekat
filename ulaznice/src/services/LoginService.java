@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import beans.Korisnik;
+import beans.Kupac;
 import dao.KorisnikDAO;
 
 @Path("")
@@ -39,6 +40,18 @@ public class LoginService {
 			return Response.status(400).entity("Invalid username and/or password").build();
 		Korisnik ulogovanKorisnik = dao.getKorisnik(korisnik.getKorisnickoIme());
 		request.getSession().setAttribute("korisnik", ulogovanKorisnik);
+		return Response.status(200).build();
+	}
+	
+	@POST
+	@Path("/registracija")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response registracija(Korisnik k, @Context HttpServletRequest request) {
+		KorisnikDAO dao = (KorisnikDAO) ctx.getAttribute("korisnikDAO");
+		Kupac kupac = dao.registracijaKupca(k.getIme(), k.getPrezime(), 
+				k.getKorisnickoIme(), k.getLozinka(), k.getPol(), k.getDatumRodjenja());
+		request.getSession().setAttribute("korisnik", kupac);
 		return Response.status(200).build();
 	}
 	

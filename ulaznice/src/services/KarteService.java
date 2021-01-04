@@ -1,5 +1,6 @@
 package services;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.annotation.PostConstruct;
@@ -16,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 
 import beans.Karta;
 import beans.Kupac;
+import beans.Stavka;
 import dao.KartaDAO;
 import dao.KorisnikDAO;
 import dao.ManifestacijaDAO;
@@ -33,6 +35,7 @@ public class KarteService {
 	
 	@GET
 	@Path("/")
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Collection<Karta> getKarte(@Context HttpServletRequest request) {
 		Kupac kupac = (Kupac) request.getSession().getAttribute("korisnik");
@@ -52,16 +55,17 @@ public class KarteService {
 	@Path("/rezervacija")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Karta rezervacijaKarte(@Context HttpServletRequest request, Karta k) {
-		//TODO vise karata
+	public void rezervacijaKarata(@Context HttpServletRequest request, ArrayList<Stavka> stavke) {
 		Kupac kupac = (Kupac) request.getSession().getAttribute("korisnik");
 		KartaDAO dao = (KartaDAO) ctx.getAttribute("kartaDAO");
 		KorisnikDAO korisnikDao = (KorisnikDAO) ctx.getAttribute("korisnikDAO");
 		ManifestacijaDAO manifDao = (ManifestacijaDAO) ctx.getAttribute("manifestacijaDAO");
-		Karta karta = dao.rezervacijaKarte(kupac, manifDao.getManifestacija(k.getIdManifestacije()), k.getTipKarte());
+		for (Stavka stavka : stavke) {
+			dao.rezervacijaKarata(kupac, manifDao.getManifestacija(stavka.getIdManifestacije()), stavka.getTipKarte(), stavka.getKomada());
+		}
 		manifDao.sacuvajManifestacije();
+		korisnikDao.azurirajTipKupca(kupac);
 		korisnikDao.sacuvajKorisnika(kupac);
-		return karta;
 	}
 	
 	@POST
@@ -73,6 +77,7 @@ public class KarteService {
 		KartaDAO dao = (KartaDAO) ctx.getAttribute("kartaDAO");
 		KorisnikDAO korisnikDao = (KorisnikDAO) ctx.getAttribute("korisnikDAO");
 		Karta karta = dao.odustanak(kupac, k.getId());
+		korisnikDao.azurirajTipKupca(kupac);
 		korisnikDao.sacuvajKorisnika(kupac);
 		return karta;
 	}

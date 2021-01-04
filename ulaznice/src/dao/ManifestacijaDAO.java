@@ -14,6 +14,7 @@ import javax.json.bind.JsonbException;
 
 import beans.Lokacija;
 import beans.Manifestacija;
+import beans.Prodavac;
 
 public class ManifestacijaDAO {
 	private HashMap<Integer, Manifestacija> manifestacije;
@@ -46,10 +47,20 @@ public class ManifestacijaDAO {
 		return manifestacije.values();
 	}
 	
-	public Manifestacija kreirajManifestaciju(int id, String naziv, String tip, int brojMesta, LocalDateTime datumVreme, float cenaKarte,
+	public Collection<Manifestacija> getManifestacije(Prodavac prodavac) {
+		ArrayList<Manifestacija> manifestacijeProd = new ArrayList<Manifestacija>();
+		for (int id : prodavac.getManifestacije())
+			manifestacijeProd.add(manifestacije.get(id));
+		return manifestacijeProd;
+	}
+	
+	// posle poziva ove metode potrebno je sacuvati prodavca
+	public Manifestacija kreirajManifestaciju(Prodavac prodavac, String naziv, String tip, int brojMesta, LocalDateTime datumVreme, float cenaKarte,
 			Lokacija lokacija) {
+		int id = manifestacije.size();
 		Manifestacija m = new Manifestacija(id, naziv, tip, brojMesta, datumVreme, cenaKarte, lokacija);
 		manifestacije.put(m.getId(), m);
+		prodavac.addManifestacija(m.getId());
 		sacuvajManifestacije();
 		return m;
 	}
