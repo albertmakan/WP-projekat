@@ -39,6 +39,8 @@ public class LoginService {
 		if (!dao.postoji(korisnik.getKorisnickoIme(), korisnik.getLozinka()))
 			return Response.status(400).entity("Invalid username and/or password").build();
 		Korisnik ulogovanKorisnik = dao.getKorisnik(korisnik.getKorisnickoIme());
+		if (ulogovanKorisnik.isBlokiran())
+			return Response.status(400).entity("User blocked").build();
 		request.getSession().setAttribute("korisnik", ulogovanKorisnik);
 		return Response.status(200).build();
 	}

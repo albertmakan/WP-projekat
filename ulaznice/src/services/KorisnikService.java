@@ -1,11 +1,14 @@
 package services;
 
+import java.util.Collection;
+
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
@@ -52,5 +55,24 @@ public class KorisnikService {
 		return dao.getKorisnik(korIme);
 	}
 	
+	@GET
+	@Path("/pretraga")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<Korisnik> pretraga(@QueryParam("ime") String tekst, @QueryParam("krit") int kriterijum) {
+		KorisnikDAO dao = (KorisnikDAO) ctx.getAttribute("korisnikDAO");
+		return dao.pretraga(tekst, kriterijum);
+	}
+	
+	@GET
+	@Path("/sumnjivi")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<Korisnik> sumnjivi() {
+		//TODO
+		return null;
+	}
+	
+	public void blokiraj() {
+		//TODO
+	}
 	
 }

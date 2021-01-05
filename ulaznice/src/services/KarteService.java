@@ -1,5 +1,7 @@
 package services;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -7,11 +9,13 @@ import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
@@ -49,6 +53,44 @@ public class KarteService {
 	public Collection<Karta> getKarte(@PathParam("id") int id) {
 		KartaDAO dao = (KartaDAO) ctx.getAttribute("kartaDAO");
 		return dao.getKarte(id);
+	}
+	
+	@GET
+	@Path("/pretraga/manifestacija")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<Karta> pretragaPoManifestaciji(@Context HttpServletRequest request,
+			@QueryParam("naziv") String tekst) {
+		Kupac kupac = (Kupac) request.getSession().getAttribute("korisnik");
+		KartaDAO dao = (KartaDAO) ctx.getAttribute("kartaDAO");
+		return dao.pretragaPoManifestaciji(kupac, tekst);
+	}
+	
+	@GET
+	@Path("/pretraga/cena")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<Karta> pretragaPoCeni(@Context HttpServletRequest request,
+			@DefaultValue("0.0") @QueryParam("od") float cenaOd,
+			@DefaultValue("100000.0") @QueryParam("do") float cenaDo) {
+		Kupac kupac = (Kupac) request.getSession().getAttribute("korisnik");
+		KartaDAO dao = (KartaDAO) ctx.getAttribute("kartaDAO");
+		return dao.pretragaPoCeni(kupac, cenaOd, cenaDo);
+	}
+	
+	@GET
+	@Path("/pretraga/datum")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<Karta> pretragaPoDatumu(@Context HttpServletRequest request,
+			@DefaultValue("01.01.2010") @QueryParam("od") String strDatumOd,
+			@DefaultValue("31.12.2030") @QueryParam("do") String strDatumDo) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+		LocalDateTime datumOd = LocalDateTime.parse(strDatumOd+" 00:00", formatter);
+		LocalDateTime datumDo = LocalDateTime.parse(strDatumDo+ "23:59", formatter);
+		Kupac kupac = (Kupac) request.getSession().getAttribute("korisnik");
+		KartaDAO dao = (KartaDAO) ctx.getAttribute("kartaDAO");
+		return dao.pretragaPoDatumu(kupac, datumOd, datumDo);
 	}
 	
 	@POST

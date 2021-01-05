@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -26,7 +27,7 @@ public class KartaDAO {
 	}
 
 	private void ucitajKarte() {
-		Jsonb jsonb = JsonbBuilder.create();		
+		Jsonb jsonb = JsonbBuilder.create();
 		try (BufferedReader br = new BufferedReader(new FileReader(putanjaFajla))) {
 			String line;
 			while ((line = br.readLine()) != null) {
@@ -57,6 +58,37 @@ public class KartaDAO {
 		return karte.get(idKarte);
 	}
 	
+	public Collection<Karta> pretragaPoManifestaciji(Kupac kupac, String tekst) {
+		ArrayList<Karta> rezultat = new ArrayList<Karta>();
+		tekst = tekst.trim().toLowerCase();
+		if (tekst.equals(""))
+			return rezultat;
+		for (String id : kupac.getSveKarte())
+			if (karte.get(id).getNazivManifestacije().toLowerCase().contains(tekst))
+				rezultat.add(karte.get(id));
+		return rezultat;
+	}
+	
+	public Collection<Karta> pretragaPoCeni(Kupac kupac, float cenaOd, float cenaDo) {
+		ArrayList<Karta> rezultat = new ArrayList<Karta>();
+		for (String id : kupac.getSveKarte()) {
+			Karta karta = karte.get(id);
+			if (karta.getCena() >= cenaOd && karta.getCena() <= cenaDo)
+				rezultat.add(karta);
+		}
+		return rezultat;
+	}
+	
+	public Collection<Karta> pretragaPoDatumu(Kupac kupac, LocalDateTime datumOd, LocalDateTime datumDo) {
+		ArrayList<Karta> rezultat = new ArrayList<Karta>();
+		for (String id : kupac.getSveKarte()) {
+			Karta karta = karte.get(id);
+			if (karta.getDatumVreme().isAfter(datumOd) && karta.getDatumVreme().isBefore(datumDo))
+				rezultat.add(karta);
+		}
+		return rezultat;
+	}
+	
 	// posle poziva ove metode potrebno je sacuvati kupca i manifestacije
 	public void rezervacijaKarata(Kupac kupac, Manifestacija manifestacija, TipKarte tip, int kom) {
 		int len = (""+manifestacija.getBrojMesta()).length();
@@ -69,7 +101,7 @@ public class KartaDAO {
 		for (int i = 0; i < kom; i++) {
 			String id = manifestacija.getNaziv().substring(0, 10-len).toUpperCase().replace(' ', '_')
 					+ String.format("%0"+len+"d", manifestacija.getBrojMesta()-manifestacija.getBrojKarata());
-			Karta karta = new Karta(id, manifestacija.getId(), manifestacija.getDatumVreme(), cena, kupac.getIme()+" "+kupac.getPrezime(), false, tip);
+			Karta karta = new Karta(id, manifestacija, cena, kupac.getIme()+" "+kupac.getPrezime(), tip);
 			karte.put(karta.getId(), karta);
 			kupac.addKarta(karta.getId());
 			manifestacija.setBrojKarata(manifestacija.getBrojKarata()-1);

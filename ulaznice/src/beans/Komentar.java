@@ -1,7 +1,7 @@
 package beans;
 
 public class Komentar {
-	private String kupac;	// ime i prezime
+	private String kupac;	// korisnicko ime
 	private int idManifestacije;
 	private String tekst;
 	private int ocena;

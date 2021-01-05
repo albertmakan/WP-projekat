@@ -8,6 +8,7 @@ public class Karta {
 	public enum TipKarte {VIP, REGULAR, FAN_PIT}
 	private String id;	// 10 karaktera
 	private int idManifestacije;
+	private String nazivManifestacije;
 	@JsonbDateFormat(JsonbDateFormat.TIME_IN_MILLIS)
 	private LocalDateTime datumVreme;
 	private float cena;
@@ -18,14 +19,14 @@ public class Karta {
 	public Karta() {
 	}
 
-	public Karta(String id, int idManifestacije, LocalDateTime datumVreme, float cena, String kupac, boolean odustanak,
-			TipKarte tipKarte) {
+	public Karta(String id, Manifestacija manifestacija, float cena, String kupac, TipKarte tipKarte) {
 		this.id = id;
-		this.idManifestacije = idManifestacije;
-		this.datumVreme = datumVreme;
+		this.idManifestacije = manifestacija.getId();
+		this.datumVreme = manifestacija.getDatumVreme();
+		this.nazivManifestacije = manifestacija.getNaziv();
 		this.cena = cena;
 		this.kupac = kupac;
-		this.odustanak = odustanak;
+		this.odustanak = false;
 		this.tipKarte = tipKarte;
 	}
 
@@ -84,6 +85,13 @@ public class Karta {
 	public void setTipKarte(TipKarte tipKarte) {
 		this.tipKarte = tipKarte;
 	}
-	
+
+	public String getNazivManifestacije() {
+		return nazivManifestacije;
+	}
+
+	public void setNazivManifestacije(String nazivManifestacije) {
+		this.nazivManifestacije = nazivManifestacije;
+	}
 	
 }

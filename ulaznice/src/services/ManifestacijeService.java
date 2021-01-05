@@ -1,16 +1,20 @@
 package services;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
@@ -78,6 +82,37 @@ public class ManifestacijeService {
 	}
 	
 	@GET
+	@Path("/pretraga/naziv")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<Manifestacija> pretragaPoNazivu(@QueryParam("naziv") String tekst) {
+		ManifestacijaDAO dao = (ManifestacijaDAO) ctx.getAttribute("manifestacijaDAO");
+		return dao.pretragaPoNazivu(tekst);
+	}
+	
+	@GET
+	@Path("/pretraga")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<Manifestacija> kombinovanaPretraga(@QueryParam("mesto") String mesto,
+			@DefaultValue("0.0") @QueryParam("cenaod") float cenaOd,
+			@DefaultValue("100000.0") @QueryParam("cenado") float cenaDo,
+			@DefaultValue("01.01.2010") @QueryParam("datumod") String strDatumOd,
+			@DefaultValue("31.12.2030") @QueryParam("datumdo") String strDatumDo) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+		LocalDateTime datumOd = LocalDateTime.parse(strDatumOd+" 00:00", formatter);
+		LocalDateTime datumDo = LocalDateTime.parse(strDatumDo+ "23:59", formatter);
+		ManifestacijaDAO dao = (ManifestacijaDAO) ctx.getAttribute("manifestacijaDAO");
+		return dao.kombinovanaPretraga(mesto, cenaOd, cenaDo, datumOd, datumDo);
+	}
+	
+	@POST
+	@Path("/odobri")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void odobriManifestaciju(Manifestacija m) {
+		ManifestacijaDAO dao = (ManifestacijaDAO) ctx.getAttribute("manifestacijaDAO");
+		dao.ododbri(m.getId());
+	}
+	
+	@GET
 	@Path("/{id}/komentari")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Collection<Komentar> getKomentare(@PathParam("id") int id) {
@@ -93,5 +128,13 @@ public class ManifestacijeService {
 		KomentarDAO dao = (KomentarDAO) ctx.getAttribute("komentarDAO");
 		Kupac kupac = (Kupac) request.getSession().getAttribute("korisnik");
 		return dao.dodajKomentar(kupac.getKorisnickoIme(), k.getIdManifestacije(), k.getTekst(), k.getOcena());
+	}
+	
+	@POST
+	@Path("/odobriKomentar")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void odobriKomentar(Komentar k) {
+		KomentarDAO dao = (KomentarDAO) ctx.getAttribute("komentarDAO");
+		dao.odobri(k);
 	}
 }

@@ -2,17 +2,45 @@ package beans;
 
 public class Lokacija {
 	private float geoDuzina, geoSirina;
-	private String adresa;	// ulica i broj, mesto/grad, postanki broj
+	private String naziv, adresa, mesto, postBroj;
 	
 	public Lokacija() {
 	}
 	
-	public Lokacija(float geoDuzina, float geoSirina, String adresa) {
+	public Lokacija(float geoDuzina, float geoSirina, String naziv, String adresa, String mesto, String postBroj) {
+		super();
 		this.geoDuzina = geoDuzina;
 		this.geoSirina = geoSirina;
+		this.naziv = naziv;
 		this.adresa = adresa;
+		this.mesto = mesto;
+		this.postBroj = postBroj;
 	}
-	
+
+	public String getNaziv() {
+		return naziv;
+	}
+
+	public void setNaziv(String naziv) {
+		this.naziv = naziv;
+	}
+
+	public String getMesto() {
+		return mesto;
+	}
+
+	public void setMesto(String mesto) {
+		this.mesto = mesto;
+	}
+
+	public String getPostBroj() {
+		return postBroj;
+	}
+
+	public void setPostBroj(String postBroj) {
+		this.postBroj = postBroj;
+	}
+
 	public float getGeoDuzina() {
 		return geoDuzina;
 	}

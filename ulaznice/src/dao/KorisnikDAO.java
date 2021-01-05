@@ -3,6 +3,8 @@ package dao;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -137,5 +139,23 @@ public class KorisnikDAO {
 	
 	public Korisnik getKorisnik(String korisnickoIme) {
 		return korisnici.get(korisnickoIme);
+	}
+	
+	public Collection<Korisnik> pretraga(String tekst, int kriterijum) {
+		ArrayList<Korisnik> rezultat = new ArrayList<Korisnik>();
+		if (kriterijum == 1) {
+			for (Korisnik korisnik : korisnici.values())
+				if (korisnik.getIme().toLowerCase().contains(tekst))
+					rezultat.add(korisnik);
+		} else if (kriterijum == 2) {
+			for (Korisnik korisnik : korisnici.values())
+				if (korisnik.getPrezime().toLowerCase().contains(tekst))
+					rezultat.add(korisnik);
+		} else { 
+			for (Korisnik korisnik : korisnici.values())
+				if (korisnik.getKorisnickoIme().toLowerCase().contains(tekst))
+					rezultat.add(korisnik);
+		}
+		return rezultat;
 	}
 }

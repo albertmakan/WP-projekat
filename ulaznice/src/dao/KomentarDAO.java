@@ -8,6 +8,9 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
+
 import beans.Komentar;
 
 public class KomentarDAO {
@@ -21,12 +24,11 @@ public class KomentarDAO {
 	}
 
 	private void ucitajKomentare() {
+		Jsonb jsonb = JsonbBuilder.create();
 		try (BufferedReader br = new BufferedReader(new FileReader(putanjaFajla))) {
 			String line;
 			while ((line = br.readLine()) != null) {
-				String[] tokens = line.split(";");
-				Komentar komentar = new Komentar(tokens[0], Integer.parseInt(tokens[1]), tokens[2], Integer.parseInt(tokens[3]));
-				komentar.setOdobren(tokens[4].equals("o"));
+				Komentar komentar = jsonb.fromJson(line, Komentar.class);
 				if (komentari.get(komentar.getIdManifestacije()) == null)
 					komentari.put(komentar.getIdManifestacije(), new ArrayList<Komentar>());
 				komentari.get(komentar.getIdManifestacije()).add(komentar);
@@ -47,15 +49,38 @@ public class KomentarDAO {
 		return komentar;
 	}
 
-	private void sacuvajKomentar(Komentar k) {
+	private void sacuvajKomentar(Komentar komentar) {
+		Jsonb jsonb = JsonbBuilder.create();
 		try {
 			PrintWriter out = new PrintWriter(new FileWriter(putanjaFajla, true));
-			out.println(k.getKupac()+';'+k.getIdManifestacije()+';'+k.getTekst()+';'+k.getOcena()+(k.isOdobren()? ";o":";n"));
+			out.println(jsonb.toJson(komentar));
 			out.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
+	private void sacuvajKomentare() {
+		Jsonb jsonb = JsonbBuilder.create();	
+		try {
+			PrintWriter out = new PrintWriter(new FileWriter(putanjaFajla, false));
+			for (int id : komentari.keySet())
+				for (Komentar k : komentari.get(id))
+					out.println(jsonb.toJson(k));
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
+	public void odobri(Komentar k) {
+		for (Komentar komentar : komentari.get(k.getIdManifestacije()))
+			if (komentar.getKupac().equals(k.getKupac()))
+				if (komentar.getOcena() == k.getOcena())
+					if (komentar.getTekst().equals(k.getTekst())) {
+						komentar.setOdobren(true);
+						sacuvajKomentare();
+						break;
+					}
+	}
 }
