@@ -1,5 +1,6 @@
 package services;
 
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
@@ -11,12 +12,16 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+
+import com.sun.jersey.core.header.FormDataContentDisposition;
+import com.sun.jersey.multipart.FormDataParam;
 
 import beans.Komentar;
 import beans.Kupac;
@@ -53,6 +58,26 @@ public class ManifestacijeService {
 		Manifestacija manifestacija = dao.kreirajManifestaciju(prodavac, m.getNaziv(), m.getTip(), m.getBrojMesta(), m.getDatumVreme(), m.getCenaKarte(), m.getLokacija());
 		korisnikDao.sacuvajKorisnika(prodavac);
 		return manifestacija;
+	}
+	
+	@POST
+	@Path("/poster")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	public void uploadImage(
+		    @FormDataParam("file") InputStream uploadedInputStream,
+		    @FormDataParam("file") FormDataContentDisposition fileDetails) {
+		ManifestacijaDAO dao = (ManifestacijaDAO) ctx.getAttribute("manifestacijaDAO");
+		System.out.println(fileDetails.getFileName());
+		dao.dodajPoster(0, uploadedInputStream);
+	}
+	
+	@PUT
+	@Path("/promenaPodataka")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Manifestacija promenaPodataka(Manifestacija noviPodaci) {
+		ManifestacijaDAO dao = (ManifestacijaDAO) ctx.getAttribute("manifestacijaDAO");
+		return dao.promenaPodataka(noviPodaci);
 	}
 	
 	@GET
@@ -104,7 +129,7 @@ public class ManifestacijeService {
 		return dao.kombinovanaPretraga(mesto, cenaOd, cenaDo, datumOd, datumDo);
 	}
 	
-	@POST
+	@PUT
 	@Path("/odobri")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void odobriManifestaciju(Manifestacija m) {
@@ -130,7 +155,7 @@ public class ManifestacijeService {
 		return dao.dodajKomentar(kupac.getKorisnickoIme(), k.getIdManifestacije(), k.getTekst(), k.getOcena());
 	}
 	
-	@POST
+	@PUT
 	@Path("/odobriKomentar")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void odobriKomentar(Komentar k) {

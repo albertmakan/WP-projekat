@@ -12,6 +12,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -50,9 +51,9 @@ public class KarteService {
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Collection<Karta> getKarte(@PathParam("id") int id) {
+	public Collection<Karta> getKarte(@PathParam("id") int idManifestacije) {
 		KartaDAO dao = (KartaDAO) ctx.getAttribute("kartaDAO");
-		return dao.getKarte(id);
+		return dao.getKarte(idManifestacije);
 	}
 	
 	@GET
@@ -110,7 +111,7 @@ public class KarteService {
 		korisnikDao.sacuvajKorisnika(kupac);
 	}
 	
-	@POST
+	@PUT
 	@Path("/odustanak")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)

@@ -137,6 +137,22 @@ public class KorisnikDAO {
 		return false;
 	}
 	
+	public Korisnik promenaPodataka(Korisnik noviPodaci) {
+		Korisnik korisnik = getKorisnik(noviPodaci.getKorisnickoIme());
+		if (noviPodaci.getIme() != null)
+			korisnik.setIme(noviPodaci.getIme());
+		if (noviPodaci.getPrezime() != null)
+			korisnik.setPrezime(noviPodaci.getPrezime());
+		if (noviPodaci.getPol() != null)
+			korisnik.setPol(noviPodaci.getPol());
+		if (noviPodaci.getDatumRodjenja() != null)
+			korisnik.setDatumRodjenja(noviPodaci.getDatumRodjenja());
+		if (noviPodaci.getLozinka() != null)
+			korisnik.setLozinka(noviPodaci.getLozinka());
+		sacuvajKorisnika(korisnik);
+		return korisnik;
+	}
+	
 	public Korisnik getKorisnik(String korisnickoIme) {
 		return korisnici.get(korisnickoIme);
 	}
@@ -157,5 +173,11 @@ public class KorisnikDAO {
 					rezultat.add(korisnik);
 		}
 		return rezultat;
+	}
+	
+	public void blokirajKorisnika(String korisnickoIme) {
+		Korisnik k = getKorisnik(korisnickoIme);
+		k.setBlokiran(true);
+		sacuvajKorisnika(k);
 	}
 }
