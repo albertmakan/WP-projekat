@@ -8,9 +8,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 
-import javax.json.bind.Jsonb;
-import javax.json.bind.JsonbBuilder;
-import javax.json.bind.JsonbException;
+import com.google.gson.Gson;
 
 import beans.Korisnik;
 import beans.Korisnik.Pol;
@@ -38,31 +36,31 @@ public class KorisnikDAO {
 	}
 	
 	private void ucitajKorisnike() {
-		Jsonb jsonb = JsonbBuilder.create();
+		Gson gson = new Gson();
 		try {
-			ulogeKorisnika = jsonb.fromJson(new FileReader(putanjaFoldera+"/uloge.json"), new HashMap<String, Uloga>(){
+			ulogeKorisnika = gson.fromJson(new FileReader(putanjaFoldera+"/uloge.json"), new HashMap<String, Uloga>(){
 				private static final long serialVersionUID = 1L;}.getClass().getGenericSuperclass());
 			for (String korIme : ulogeKorisnika.keySet()) {
 				Uloga u = ulogeKorisnika.get(korIme);
 				switch (u) {
 				case ADMIN:
-					Korisnik admin = jsonb.fromJson(new FileReader(putanjaFoldera+'/'+korIme+".json"), Korisnik.class);
+					Korisnik admin = gson.fromJson(new FileReader(putanjaFoldera+'/'+korIme+".json"), Korisnik.class);
 			    	korisnici.put(admin.getKorisnickoIme(), admin);
 			    	break;
 				case KUPAC:
-					Kupac kupac = jsonb.fromJson(new FileReader(putanjaFoldera+'/'+korIme+".json"), Kupac.class);
+					Kupac kupac = gson.fromJson(new FileReader(putanjaFoldera+'/'+korIme+".json"), Kupac.class);
 			    	azurirajTipKupca(kupac);
 			    	korisnici.put(kupac.getKorisnickoIme(), kupac);
 			    	break;
 				case PRODAVAC:
-					Prodavac prod = jsonb.fromJson(new FileReader(putanjaFoldera+'/'+korIme+".json"), Prodavac.class);
+					Prodavac prod = gson.fromJson(new FileReader(putanjaFoldera+'/'+korIme+".json"), Prodavac.class);
 			    	korisnici.put(prod.getKorisnickoIme(), prod);
 			    	break;
 				default:
 					break;
 				}
 			}
-		} catch (JsonbException | FileNotFoundException e) {
+		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
@@ -103,11 +101,11 @@ public class KorisnikDAO {
 	public void sacuvajKorisnika(Korisnik k) {
 		ulogeKorisnika.put(k.getKorisnickoIme(), k.getUloga());
 		korisnici.put(k.getKorisnickoIme(), k);
-		Jsonb jsonb = JsonbBuilder.create();
+		Gson gson = new Gson();
 		PrintWriter pw = null;
 		try {
 			pw = new PrintWriter(putanjaFoldera+'/'+k.getKorisnickoIme()+".json");
-			pw.write(jsonb.toJson(k));
+			pw.write(gson.toJson(k));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -116,11 +114,11 @@ public class KorisnikDAO {
 	}
 	
 	private void sacuvajUloge() {
-		Jsonb jsonb = JsonbBuilder.create();
+		Gson gson = new Gson();
 		PrintWriter pw = null;
 		try {
 			pw = new PrintWriter(putanjaFoldera+"/uloge.json");
-			pw.write(jsonb.toJson(ulogeKorisnika));
+			pw.write(gson.toJson(ulogeKorisnika));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}

@@ -1,4 +1,4 @@
-package services;
+/*package services;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
@@ -16,7 +16,7 @@ import beans.Korisnik;
 import beans.Kupac;
 import dao.KorisnikDAO;
 
-@Path("")
+@Path("/user")
 public class LoginService {
 	@Context
 	ServletContext ctx;
@@ -72,3 +72,4 @@ public class LoginService {
 		return (Korisnik) request.getSession().getAttribute("korisnik");
 	}
 }
+*/

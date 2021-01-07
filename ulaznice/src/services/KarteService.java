@@ -1,4 +1,4 @@
-package services;
+/*package services;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -124,4 +124,4 @@ public class KarteService {
 		korisnikDao.sacuvajKorisnika(kupac);
 		return karta;
 	}
-}
+}*/

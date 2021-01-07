@@ -1,6 +1,6 @@
-package services;
+/*package services;
 
-import java.io.InputStream;
+//import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
@@ -20,8 +20,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
-import com.sun.jersey.core.header.FormDataContentDisposition;
-import com.sun.jersey.multipart.FormDataParam;
+//import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+//import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import beans.Komentar;
 import beans.Kupac;
@@ -163,3 +163,4 @@ public class ManifestacijeService {
 		dao.odobri(k);
 	}
 }
+*/

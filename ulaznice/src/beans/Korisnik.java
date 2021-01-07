@@ -2,14 +2,11 @@ package beans;
 
 import java.util.Date;
 
-import javax.json.bind.annotation.JsonbDateFormat;
-
 public class Korisnik {
 	public enum Pol {M, Z}
 	public enum Uloga {ADMIN, PRODAVAC, KUPAC}
 	private String korisnickoIme, lozinka, ime, prezime;
 	private Pol pol;
-	@JsonbDateFormat(JsonbDateFormat.TIME_IN_MILLIS)
 	private Date datumRodjenja;
 	private Uloga uloga;
 	private boolean blokiran;

@@ -1,7 +1,6 @@
 package beans;
 
 import java.time.LocalDateTime;
-import javax.json.bind.annotation.JsonbDateFormat;
 
 public class Manifestacija {
 	private int id;
@@ -9,7 +8,6 @@ public class Manifestacija {
 	private String tip;
 	private int brojMesta;
 	private int brojKarata;
-	@JsonbDateFormat(JsonbDateFormat.TIME_IN_MILLIS)
 	private LocalDateTime datumVreme;
 	private float cenaKarte;
 	private boolean aktivna;

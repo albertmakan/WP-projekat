@@ -8,8 +8,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.json.bind.Jsonb;
-import javax.json.bind.JsonbBuilder;
+import com.google.gson.Gson;
 
 import beans.Komentar;
 
@@ -24,11 +23,11 @@ public class KomentarDAO {
 	}
 
 	private void ucitajKomentare() {
-		Jsonb jsonb = JsonbBuilder.create();
+		Gson gson = new Gson();
 		try (BufferedReader br = new BufferedReader(new FileReader(putanjaFajla))) {
 			String line;
 			while ((line = br.readLine()) != null) {
-				Komentar komentar = jsonb.fromJson(line, Komentar.class);
+				Komentar komentar = gson.fromJson(line, Komentar.class);
 				if (komentari.get(komentar.getIdManifestacije()) == null)
 					komentari.put(komentar.getIdManifestacije(), new ArrayList<Komentar>());
 				komentari.get(komentar.getIdManifestacije()).add(komentar);
@@ -50,10 +49,10 @@ public class KomentarDAO {
 	}
 
 	private void sacuvajKomentar(Komentar komentar) {
-		Jsonb jsonb = JsonbBuilder.create();
+		Gson gson = new Gson();
 		try {
 			PrintWriter out = new PrintWriter(new FileWriter(putanjaFajla, true));
-			out.println(jsonb.toJson(komentar));
+			out.println(gson.toJson(komentar));
 			out.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -61,12 +60,12 @@ public class KomentarDAO {
 	}
 	
 	private void sacuvajKomentare() {
-		Jsonb jsonb = JsonbBuilder.create();	
+		Gson gson = new Gson();	
 		try {
 			PrintWriter out = new PrintWriter(new FileWriter(putanjaFajla, false));
 			for (int id : komentari.keySet())
 				for (Komentar k : komentari.get(id))
-					out.println(jsonb.toJson(k));
+					out.println(gson.toJson(k));
 			out.close();
 		} catch (IOException e) {
 			e.printStackTrace();

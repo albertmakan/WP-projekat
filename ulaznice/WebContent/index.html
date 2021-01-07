@@ -1,19 +1,29 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 	<title>Ulaznice.rs</title>
 	<link href="css/main.css" rel="stylesheet" />
 	<link href="css/toast.css" rel="stylesheet" />
-	<script src="js/jquery.min.js"></script>
-	<script src="js/toast.js"></script>
-<style>
-div.vdp-datepicker{ 
-  display: inline;
-}
-</style>
 </head>
 <body>
+
+
+<div id="ulaznice">
+<form action="/rest/slika" method="post" enctype="multipart/form-data">
+File: <input type="file" name="myfile">
+<input type="submit" value="Submit">
+</form>
+</div>
+
+<script src="js/vue.js"></script>
+<script src="js/axios.js"></script>
+<script src="js/jquery.min.js"></script>
+<script src="js/toast.js"></script>
+<script src="js/vuejs-datepicker.min.js"></script>
+<script src="js/moment.min.js"></script>
+
+<script src="app/app.js"></script>
 
 </body>
 </html>

@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
-import javax.json.bind.Jsonb;
-import javax.json.bind.JsonbBuilder;
+import com.google.gson.Gson;
+
 import beans.Karta;
 import beans.Karta.TipKarte;
 import beans.Kupac;
@@ -27,11 +27,11 @@ public class KartaDAO {
 	}
 
 	private void ucitajKarte() {
-		Jsonb jsonb = JsonbBuilder.create();
+		Gson gson = new Gson();
 		try (BufferedReader br = new BufferedReader(new FileReader(putanjaFajla))) {
 			String line;
 			while ((line = br.readLine()) != null) {
-				Karta karta = jsonb.fromJson(line, Karta.class);
+				Karta karta = gson.fromJson(line, Karta.class);
 				karte.put(karta.getId(), karta);
 			}
 		} catch (IOException e) {
@@ -122,10 +122,10 @@ public class KartaDAO {
 	}
 	
 	private void sacuvajKartu(Karta karta) {
-		Jsonb jsonb = JsonbBuilder.create();	
+		Gson gson = new Gson();	
 		try {
 			PrintWriter out = new PrintWriter(new FileWriter(putanjaFajla, true));
-			out.println(jsonb.toJson(karta));
+			out.println(gson.toJson(karta));
 			out.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -133,11 +133,11 @@ public class KartaDAO {
 	}
 	
 	private void sacuvajKarte() {
-		Jsonb jsonb = JsonbBuilder.create();	
+		Gson gson = new Gson();	
 		try {
 			PrintWriter out = new PrintWriter(new FileWriter(putanjaFajla, false));
 			for (Karta karta : karte.values())
-				out.println(jsonb.toJson(karta));
+				out.println(gson.toJson(karta));
 			out.close();
 		} catch (IOException e) {
 			e.printStackTrace();

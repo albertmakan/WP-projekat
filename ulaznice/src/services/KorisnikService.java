@@ -1,4 +1,4 @@
-package services;
+/*package services;
 
 import java.util.Collection;
 
@@ -99,4 +99,4 @@ public class KorisnikService {
 		dao.blokirajKorisnika(k.getKorisnickoIme());
 	}
 	
-}
+}*/

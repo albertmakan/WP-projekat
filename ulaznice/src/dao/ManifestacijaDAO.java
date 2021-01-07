@@ -14,9 +14,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import javax.json.bind.Jsonb;
-import javax.json.bind.JsonbBuilder;
-import javax.json.bind.JsonbException;
+import com.google.gson.Gson;
 
 import beans.Lokacija;
 import beans.Manifestacija;
@@ -37,9 +35,9 @@ public class ManifestacijaDAO {
 	}
 
 	private void ucitajManifestacije() {
-		Jsonb jsonb = JsonbBuilder.create();
+		Gson gson = new Gson();
 		try {
-			ArrayList<Manifestacija> sveManifestacije = jsonb.fromJson(new FileReader(putanjaFajla),
+			ArrayList<Manifestacija> sveManifestacije = gson.fromJson(new FileReader(putanjaFajla),
 					new ArrayList<Manifestacija>() {
 						private static final long serialVersionUID = 1L;
 					}.getClass().getGenericSuperclass());
@@ -52,7 +50,7 @@ public class ManifestacijaDAO {
 					mesta.put(mesto, mesta.get(mesto) + 1);
 				tipovi.add(manifestacija.getTip());
 			}
-		} catch (JsonbException | FileNotFoundException e) {
+		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
@@ -136,11 +134,11 @@ public class ManifestacijaDAO {
 	}
 
 	public void sacuvajManifestacije() {
-		Jsonb jsonb = JsonbBuilder.create();
+		Gson gson = new Gson();
 		PrintWriter pw = null;
 		try {
 			pw = new PrintWriter(putanjaFajla);
-			pw.write(jsonb.toJson(manifestacije.values()));
+			pw.write(gson.toJson(manifestacije.values()));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -152,7 +150,7 @@ public class ManifestacijaDAO {
 		return putanjaPostera;
 	}
 
-	public void ododbri(int idManifestacije) {
+	public void odobri(int idManifestacije) {
 		Manifestacija m = manifestacije.get(idManifestacije);
 		if (m != null) {
 			m.setAktivna(true);
@@ -160,7 +158,7 @@ public class ManifestacijaDAO {
 		}
 	}
 
-	public void dodajPoster(int id, InputStream is) {
+	public void dodajPoster(String id, InputStream is) {
 		try {
 			OutputStream out = new FileOutputStream(new File(putanjaPostera + "/" + id + ".png"));
 			int read = 0;
