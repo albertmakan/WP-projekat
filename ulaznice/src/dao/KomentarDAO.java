@@ -18,7 +18,7 @@ public class KomentarDAO {
 	
 	public KomentarDAO(String contextPath) {
 		komentari = new HashMap<Integer, ArrayList<Komentar>>();
-		putanjaFajla = contextPath+"/data/komentari.csv";
+		putanjaFajla = contextPath+"/data/komentari.json";
 		ucitajKomentare();
 	}
 

@@ -5,9 +5,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 
 import com.google.gson.Gson;
@@ -22,6 +22,7 @@ public class KartaDAO {
 	private String putanjaFajla;
 	
 	public KartaDAO(String contextPath) {
+		karte = new HashMap<String, Karta>();
 		putanjaFajla = contextPath+"/data/karte.json";
 		ucitajKarte();
 	}
@@ -79,11 +80,11 @@ public class KartaDAO {
 		return rezultat;
 	}
 	
-	public Collection<Karta> pretragaPoDatumu(Kupac kupac, LocalDateTime datumOd, LocalDateTime datumDo) {
+	public Collection<Karta> pretragaPoDatumu(Kupac kupac, Date datumOd, Date datumDo) {
 		ArrayList<Karta> rezultat = new ArrayList<Karta>();
 		for (String id : kupac.getSveKarte()) {
 			Karta karta = karte.get(id);
-			if (karta.getDatumVreme().isAfter(datumOd) && karta.getDatumVreme().isBefore(datumDo))
+			if (karta.getDatumVreme().after(datumOd) && karta.getDatumVreme().before(datumDo))
 				rezultat.add(karta);
 		}
 		return rezultat;

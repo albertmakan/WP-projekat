@@ -8,21 +8,25 @@
 </head>
 <body>
 
+<div class="header">
+	<h1>ulaznice</h1>
+	<span class="korisnik"><a href="#/prijava">Prijava</a></span>
+	
+</div>
 
 <div id="ulaznice">
-<form action="/rest/slika" method="post" enctype="multipart/form-data">
-File: <input type="file" name="myfile">
-<input type="submit" value="Submit">
-</form>
+	<router-view></router-view>
 </div>
 
 <script src="js/vue.js"></script>
+<script src="js/vue-router.js"></script>
 <script src="js/axios.js"></script>
 <script src="js/jquery.min.js"></script>
 <script src="js/toast.js"></script>
-<script src="js/vuejs-datepicker.min.js"></script>
-<script src="js/moment.min.js"></script>
 
+<script src="app/prijava.js"></script>
+<script src="app/pocetna.js"></script>
+<script src="app/registracija.js"></script>
 <script src="app/app.js"></script>
 
 </body>

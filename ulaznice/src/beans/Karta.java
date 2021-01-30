@@ -1,13 +1,13 @@
 package beans;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 public class Karta {
 	public enum TipKarte {VIP, REGULAR, FAN_PIT}
 	private String id;	// 10 karaktera
 	private int idManifestacije;
 	private String nazivManifestacije;
-	private LocalDateTime datumVreme;
+	private Date datumVreme;
 	private float cena;
 	private String kupac;	// ime i prezime
 	private boolean odustanak;
@@ -43,11 +43,11 @@ public class Karta {
 		this.idManifestacije = idManifestacije;
 	}
 
-	public LocalDateTime getDatumVreme() {
+	public Date getDatumVreme() {
 		return datumVreme;
 	}
 
-	public void setDatumVreme(LocalDateTime datumVreme) {
+	public void setDatumVreme(Date datumVreme) {
 		this.datumVreme = datumVreme;
 	}
 

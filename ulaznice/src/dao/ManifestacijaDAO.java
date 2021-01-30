@@ -8,14 +8,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 
 import com.google.gson.Gson;
-
 import beans.Lokacija;
 import beans.Manifestacija;
 import beans.Prodavac;
@@ -28,7 +27,9 @@ public class ManifestacijaDAO {
 	private String putanjaPostera;
 
 	public ManifestacijaDAO(String contextPath) {
+		manifestacije = new HashMap<Integer, Manifestacija>();
 		mesta = new HashMap<String, Integer>();
+		tipovi = new HashSet<String>();
 		putanjaFajla = contextPath + "/data/manifestacije.json";
 		putanjaPostera = contextPath + "/data/posteri";
 		ucitajManifestacije();
@@ -82,12 +83,12 @@ public class ManifestacijaDAO {
 	}
 
 	public Collection<Manifestacija> kombinovanaPretraga(String mesto, float cenaOd, float cenaDo,
-			LocalDateTime datumOd, LocalDateTime datumDo) {
+			Date datumOd, Date datumDo) {
 		ArrayList<Manifestacija> rezultat = new ArrayList<Manifestacija>();
 		for (Manifestacija m : manifestacije.values()) {
 			if (m.getLokacija().getMesto().equals(mesto)) {
 				if (m.getCenaKarte() >= cenaOd && m.getCenaKarte() <= cenaDo) {
-					if (m.getDatumVreme().isAfter(datumOd) && m.getDatumVreme().isBefore(datumDo)) {
+					if (m.getDatumVreme().after(datumOd) && m.getDatumVreme().before(datumDo)) {
 						rezultat.add(m);
 					}
 				}
@@ -98,7 +99,7 @@ public class ManifestacijaDAO {
 
 	// posle poziva ove metode potrebno je sacuvati prodavca
 	public Manifestacija kreirajManifestaciju(Prodavac prodavac, String naziv, String tip, int brojMesta,
-			LocalDateTime datumVreme, float cenaKarte, Lokacija lokacija) {
+			Date datumVreme, float cenaKarte, Lokacija lokacija) {
 		int id = manifestacije.size();
 		Manifestacija m = new Manifestacija(id, naziv, tip, brojMesta, datumVreme, cenaKarte, lokacija);
 		manifestacije.put(m.getId(), m);

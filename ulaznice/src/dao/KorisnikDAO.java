@@ -84,14 +84,14 @@ public class KorisnikDAO {
 	}
 	
 	public Prodavac registracijaProdavca(String ime, String prezime, String korisnickoIme, String lozinka, Pol pol, Date datumRodjenja) {
-		Prodavac p = new Prodavac(korisnickoIme, lozinka, korisnickoIme, prezime, pol, datumRodjenja);
+		Prodavac p = new Prodavac(korisnickoIme, lozinka, ime, prezime, pol, datumRodjenja);
 		sacuvajKorisnika(p);
 		sacuvajUloge();
 		return p;
 	}
 	
 	public Kupac registracijaKupca(String ime, String prezime, String korisnickoIme, String lozinka, Pol pol, Date datumRodjenja) {
-		Kupac k = new Kupac(korisnickoIme, lozinka, korisnickoIme, prezime, pol, datumRodjenja);
+		Kupac k = new Kupac(korisnickoIme, lozinka, ime, prezime, pol, datumRodjenja);
 		azurirajTipKupca(k);
 		sacuvajKorisnika(k);
 		sacuvajUloge();

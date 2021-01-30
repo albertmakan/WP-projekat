@@ -9,14 +9,23 @@ import static spark.Spark.staticFiles;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.Part;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonSerializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
 
 import beans.Karta;
 import beans.Komentar;
@@ -36,7 +45,17 @@ public class SparkUlazniceMain {
 	private static KomentarDAO komentarDAO = new KomentarDAO(contextPath);
 	private static KorisnikDAO korisnikDAO = new KorisnikDAO(contextPath);
 	private static ManifestacijaDAO manifestacijaDAO = new ManifestacijaDAO(contextPath);
-	private static Gson gson = new Gson();
+	
+	private static Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
+		public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+				throws JsonParseException {
+			return new Date(json.getAsJsonPrimitive().getAsLong());
+		}
+	}).registerTypeAdapter(Date.class, new JsonSerializer<Date>() {
+		public JsonElement serialize(Date date, Type typeOfT, JsonSerializationContext context) {
+			return new JsonPrimitive(date.getTime());
+		}
+	}).create();
 
 	public static void main(String[] args) throws IOException {
 		port(8090);
@@ -165,9 +184,9 @@ public class SparkUlazniceMain {
 			String mesto = req.queryParams("mesto");
 			float cenaOd = Float.parseFloat(req.queryParams("cenaod"));
 			float cenaDo = Float.parseFloat(req.queryParams("cenado"));
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-			LocalDateTime datumOd = LocalDateTime.parse(req.queryParams("datumod") + " 00:00", formatter);
-			LocalDateTime datumDo = LocalDateTime.parse(req.queryParams("datumdo") + "23:59", formatter);
+			SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+			Date datumOd = formatter.parse(req.queryParams("datumod") + " 00:00");
+			Date datumDo = formatter.parse(req.queryParams("datumdo") + "23:59");
 			return gson.toJson(manifestacijaDAO.kombinovanaPretraga(mesto, cenaOd, cenaDo, datumOd, datumDo));
 		});
 
@@ -226,9 +245,9 @@ public class SparkUlazniceMain {
 		get("/karte/pretraga/datum", (req, res) -> {
 			res.type("application/json");
 			Kupac kupac = req.session().attribute("korisnik");
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-			LocalDateTime datumOd = LocalDateTime.parse(req.queryParams("datumod") + " 00:00", formatter);
-			LocalDateTime datumDo = LocalDateTime.parse(req.queryParams("datumdo") + "23:59", formatter);
+			SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+			Date datumOd = formatter.parse(req.queryParams("datumod") + " 00:00");
+			Date datumDo = formatter.parse(req.queryParams("datumdo") + "23:59");
 			return gson.toJson(kartaDAO.pretragaPoDatumu(kupac, datumOd, datumDo));
 		});
 

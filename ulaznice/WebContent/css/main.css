@@ -1,3 +1,28 @@
 div.vdp-datepicker{ 
-  display: inline;
+	display: inline;
+}
+
+body {
+	font-family: sans-serif;
+}
+
+h1 {
+	display: inline-block;
+}
+
+div.header {
+	background-color: gray;
+	padding: 1px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+span.korisnik {
+	float: right;
+	padding: 20px;
+}
+
+div.forma {
+	background-color: lightgray;
+	padding: 20px;
 }
