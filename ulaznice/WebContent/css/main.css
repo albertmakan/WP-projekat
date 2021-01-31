@@ -11,6 +11,7 @@ h1 {
 }
 
 div.header {
+	color: orange;
 	background-color: gray;
 	padding: 1px;
 	padding-left: 10px;
@@ -25,4 +26,15 @@ span.korisnik {
 div.forma {
 	background-color: lightgray;
 	padding: 20px;
+	display: flex;
+}
+
+input:invalid {
+  	background-color: white;
+}
+
+table.korisnik-info > tr > td {
+    border-bottom: 1px solid black;
+    padding: 5px;
+    padding-right: 20px;
 }

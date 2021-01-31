@@ -69,17 +69,18 @@ public class SparkUlazniceMain {
 			if (ulogovanKorisnik.isBlokiran())
 				return "Korisnik je blokiran";
 			req.session().attribute("korisnik", ulogovanKorisnik);
-			res.redirect("");// TODO
 			return "OK";
 		});
 
 		post("/registracija", (req, res) -> {
 			Korisnik k = gson.fromJson(req.body(), Korisnik.class);
-			Kupac kupac = korisnikDAO.registracijaKupca(k.getIme(), k.getPrezime(), k.getKorisnickoIme(),
-					k.getLozinka(), k.getPol(), k.getDatumRodjenja());
-			req.session().attribute("korisnik", kupac);
-			res.redirect("");// TODO
-			return "OK";
+			if (korisnikDAO.validnoKorisnickoIme(k.getKorisnickoIme())) {
+				Kupac kupac = korisnikDAO.registracijaKupca(k.getIme(), k.getPrezime(), k.getKorisnickoIme(),
+						k.getLozinka(), k.getPol(), k.getDatumRodjenja());
+				req.session().attribute("korisnik", kupac);
+				return "OK";
+			}
+			return "Vec postoji korisnik sa tim korisnickim imenom.";
 		});
 
 		post("/logout", (req, res) -> {
@@ -89,7 +90,7 @@ public class SparkUlazniceMain {
 
 		get("/trenutniKorisnik", (req, res) -> {
 			res.type("application/json");
-			return gson.toJson(req.session().attribute("korisnik"));
+			return gson.toJson((Korisnik)req.session().attribute("korisnik"));
 		});
 
 		// --------------------------------------------------------------------------------

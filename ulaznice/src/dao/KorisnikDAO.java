@@ -127,6 +127,7 @@ public class KorisnikDAO {
 	}
 	
 	public boolean validnoKorisnickoIme(String korisnickoIme) {
+		if (korisnickoIme == null) return false;
 		if (korisnickoIme.matches("[a-zA-Z0-9._]{4,30}")) {
 			if (ulogeKorisnika.get(korisnickoIme) != null || korisnickoIme.equals("uloge"))
 				return false;

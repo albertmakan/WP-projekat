@@ -1,6 +1,8 @@
 const Pocetna = { template: '<pocetna></pocetna>' }
 const Prijava = { template: '<prijava></prijava>' }
 const Registracija = { template: '<registracija></registracija>' }
+const Profil = { template: '<profil></profil>' }
+const Kreiranje = { template: '<kreiranje></kreiranje>' }
 
 
 const router = new VueRouter({
@@ -8,7 +10,9 @@ const router = new VueRouter({
 	  routes: [
 	    { path: '/', component: Pocetna },
 		{ path: '/prijava', component: Prijava },
-	    { path: '/registracija', component: Registracija }
+	    { path: '/registracija', component: Registracija },
+		{ path: '/profil', component: Profil },
+		{ path: '/kreiranje', component: Kreiranje }
 	  ]
 });
 
@@ -16,24 +20,3 @@ var app = new Vue({
 	router,
 	el: '#ulaznice'
 });
-
-
-/*var app = new Vue({ 
-    el: '#hello',
-    data() {
-       	return {
-			selectedFile: null
-		}
-    },
-    
-    methods: {
-    	onFileSelected(event) {
-    		this.selectedFile = event.target.files[0]   
-    	},
-    	onUpload() {
-			const fd = new FormData();
-			fd.append('file', this.selectedFile)
-    		axios.post('rest/manifestacije/poster', fd)
-    	}
-   	}
-});		*/
