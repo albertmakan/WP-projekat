@@ -56,6 +56,10 @@ public class SparkUlazniceMain {
 			return new JsonPrimitive(date.getTime());
 		}
 	}).create();
+	
+	private static boolean isEmptyOrNull(String str) {
+		return str == null || str.trim().isEmpty();
+	}
 
 	public static void main(String[] args) throws IOException {
 		port(8090);
@@ -140,16 +144,16 @@ public class SparkUlazniceMain {
 			Manifestacija m = gson.fromJson(req.body(), Manifestacija.class);
 			Manifestacija manifestacija = manifestacijaDAO.kreirajManifestaciju(prodavac, m.getNaziv(), m.getTip(),
 					m.getBrojMesta(), m.getDatumVreme(), m.getCenaKarte(), m.getLokacija());
-			korisnikDAO.sacuvajKorisnika(prodavac);
+			//korisnikDAO.sacuvajKorisnika(prodavac);
 			return gson.toJson(manifestacija);
 		});
 
 		post("/manifestacije/poster/:id", (req, res) -> {
 			req.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/tmp"));
 			Part uploadaedfile = null;
-			uploadaedfile = req.raw().getPart("myfile");
+			uploadaedfile = req.raw().getPart("file");
 			InputStream is = uploadaedfile.getInputStream();
-			manifestacijaDAO.dodajPoster(req.queryParams("id"), is);
+			manifestacijaDAO.dodajPoster(req.params("id"), is);
 			return "success";
 		});
 
@@ -169,10 +173,20 @@ public class SparkUlazniceMain {
 			res.type("application/json");
 			return gson.toJson(manifestacijaDAO.getManifestacije());
 		});
+		
+		get("/manifestacije/tipovi", (req, res) -> {
+			res.type("application/json");
+			return gson.toJson(manifestacijaDAO.getTipovi().toArray());
+		});
+		
+		get("/manifestacije/mesta", (req, res) -> {
+			res.type("application/json");
+			return gson.toJson(manifestacijaDAO.getMesta());
+		});
 
 		get("/manifestacije/:id", (req, res) -> {
 			res.type("application/json");
-			return gson.toJson(manifestacijaDAO.getManifestacija(Integer.parseInt(req.queryParams("id"))));
+			return gson.toJson(manifestacijaDAO.getManifestacija(Integer.parseInt(req.params("id"))));
 		});
 
 		get("/manifestacije/pretraga/naziv", (req, res) -> {
@@ -180,14 +194,14 @@ public class SparkUlazniceMain {
 			return gson.toJson(manifestacijaDAO.pretragaPoNazivu(req.queryParams("naziv")));
 		});
 
-		get("/manifestacije/pretraga", (req, res) -> {
+		get("/manifestacije/pretraga/komb", (req, res) -> {
 			res.type("application/json");
-			String mesto = req.queryParams("mesto");
-			float cenaOd = Float.parseFloat(req.queryParams("cenaod"));
-			float cenaDo = Float.parseFloat(req.queryParams("cenado"));
-			SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-			Date datumOd = formatter.parse(req.queryParams("datumod") + " 00:00");
-			Date datumDo = formatter.parse(req.queryParams("datumdo") + "23:59");
+			String mesto = req.queryParams("mesto")==null? "":req.queryParams("mesto");
+			float cenaOd = isEmptyOrNull(req.queryParams("cenaod"))? 0:Float.parseFloat(req.queryParams("cenaod"));
+			float cenaDo = isEmptyOrNull(req.queryParams("cenado"))? 100000:Float.parseFloat(req.queryParams("cenado"));
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			Date datumOd = isEmptyOrNull(req.queryParams("datumod"))? new Date(0L):formatter.parse(req.queryParams("datumod") + " 00:00");
+			Date datumDo = isEmptyOrNull(req.queryParams("datumdo"))? new Date(1700000000000L):formatter.parse(req.queryParams("datumdo") + " 23:59");
 			return gson.toJson(manifestacijaDAO.kombinovanaPretraga(mesto, cenaOd, cenaDo, datumOd, datumDo));
 		});
 
@@ -199,7 +213,7 @@ public class SparkUlazniceMain {
 
 		get("/manifestacije/:id/komentari", (req, res) -> {
 			res.type("application/json");
-			return gson.toJson(komentarDAO.getKomentari(Integer.parseInt(req.queryParams("id"))));
+			return gson.toJson(komentarDAO.getKomentari(Integer.parseInt(req.params("id"))));
 		});
 
 		post("/manifestacije/dodajKomentar", (req, res) -> {
@@ -226,7 +240,7 @@ public class SparkUlazniceMain {
 
 		get("/karte/:id", (req, res) -> {
 			res.type("application/json");
-			return gson.toJson(kartaDAO.getKarte(Integer.parseInt(req.queryParams("id"))));
+			return gson.toJson(kartaDAO.getKarte(Integer.parseInt(req.params("id"))));
 		});
 
 		get("/karte/pretraga/manifestacija", (req, res) -> {
@@ -238,17 +252,17 @@ public class SparkUlazniceMain {
 		get("/karte/pretraga/cena", (req, res) -> {
 			res.type("application/json");
 			Kupac kupac = req.session().attribute("korisnik");
-			float cenaOd = Float.parseFloat(req.queryParams("cenaod"));
-			float cenaDo = Float.parseFloat(req.queryParams("cenado"));
+			float cenaOd = isEmptyOrNull(req.queryParams("cenaod"))? 0:Float.parseFloat(req.queryParams("cenaod"));
+			float cenaDo = isEmptyOrNull(req.queryParams("cenado"))? 100000:Float.parseFloat(req.queryParams("cenado"));
 			return gson.toJson(kartaDAO.pretragaPoCeni(kupac, cenaOd, cenaDo));
 		});
 
 		get("/karte/pretraga/datum", (req, res) -> {
 			res.type("application/json");
 			Kupac kupac = req.session().attribute("korisnik");
-			SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-			Date datumOd = formatter.parse(req.queryParams("datumod") + " 00:00");
-			Date datumDo = formatter.parse(req.queryParams("datumdo") + "23:59");
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			Date datumOd = isEmptyOrNull(req.queryParams("datumod"))? new Date(0L):formatter.parse(req.queryParams("datumod") + " 00:00");
+			Date datumDo = isEmptyOrNull(req.queryParams("datumdo"))? new Date(1700000000000L):formatter.parse(req.queryParams("datumdo") + " 23:59");
 			return gson.toJson(kartaDAO.pretragaPoDatumu(kupac, datumOd, datumDo));
 		});
 

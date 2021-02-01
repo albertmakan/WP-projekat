@@ -13,7 +13,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-
 import com.google.gson.Gson;
 import beans.Lokacija;
 import beans.Manifestacija;
@@ -86,7 +85,7 @@ public class ManifestacijaDAO {
 			Date datumOd, Date datumDo) {
 		ArrayList<Manifestacija> rezultat = new ArrayList<Manifestacija>();
 		for (Manifestacija m : manifestacije.values()) {
-			if (m.getLokacija().getMesto().equals(mesto)) {
+			if (m.getLokacija().getMesto().contains(mesto)) {
 				if (m.getCenaKarte() >= cenaOd && m.getCenaKarte() <= cenaDo) {
 					if (m.getDatumVreme().after(datumOd) && m.getDatumVreme().before(datumDo)) {
 						rezultat.add(m);
@@ -109,7 +108,7 @@ public class ManifestacijaDAO {
 		else
 			mesta.put(mesto, mesta.get(mesto) + 1);
 		tipovi.add(m.getTip());
-		prodavac.addManifestacija(m.getId());
+		//prodavac.addManifestacija(m.getId());
 		sacuvajManifestacije();
 		return m;
 	}
@@ -132,6 +131,14 @@ public class ManifestacijaDAO {
 		if (noviPodaci.getLokacija() != null)
 			manifestacija.setLokacija(noviPodaci.getLokacija());
 		return manifestacija;
+	}
+	
+	public Collection<String> getTipovi() {
+		return tipovi;
+	}
+	
+	public Collection<String> getMesta() {
+		return mesta.keySet();
 	}
 
 	public void sacuvajManifestacije() {

@@ -59,7 +59,7 @@ Vue.component("registracija", {
 				.then(response => {
 				if (response.data == "OK") {
 					alert("Uspesna registracija")
-					window.location.href = "#/pocetna";
+					window.location.href = "#/";
 					document.getElementById("korisnik_link").innerHTML = "<a href='#/profil'>"+korisnik.korisnickoIme+"</a>";
 				} else {
 					toast(response.data);

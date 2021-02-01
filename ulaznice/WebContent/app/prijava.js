@@ -36,7 +36,7 @@ Vue.component("prijava", {
     		.post("/login", k)
     		.then(response => {
 				if (response.data == "OK") {
-					window.location.href = "#/pocetna";
+					window.location.href = "#/";
 					document.getElementById("korisnik_link").innerHTML = "<a href='#/profil'>"+korisnik.korisnickoIme+"</a>";
 				} else {
 					toast(response.data);

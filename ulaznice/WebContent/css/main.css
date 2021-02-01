@@ -1,7 +1,3 @@
-div.vdp-datepicker{ 
-	display: inline;
-}
-
 body {
 	font-family: sans-serif;
 }
@@ -37,4 +33,28 @@ table.korisnik-info > tr > td {
     border-bottom: 1px solid black;
     padding: 5px;
     padding-right: 20px;
+}
+
+.map {
+	height: 300px;
+	width: 500px;
+	border: 2px solid black;
+}
+
+.manifestacija-mali {
+	float: left;
+	width: 300px;
+	height: 300px;
+	border: 1px solid gray;
+	margin: 5px;
+	padding: 10px;
+}
+
+.poster-mali:hover {
+	border: 2px solid orange;
+}
+
+.komb-pretraga {
+	padding: 10px;
+	background-color: lightgray;
 }
