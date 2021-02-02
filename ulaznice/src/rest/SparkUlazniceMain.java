@@ -268,7 +268,7 @@ public class SparkUlazniceMain {
 
 		post("/karte/rezervacija", (req, res) -> {
 			Kupac kupac = req.session().attribute("korisnik");
-			ArrayList<Stavka> stavke = gson.fromJson(req.body(), new ArrayList<Manifestacija>() {
+			ArrayList<Stavka> stavke = gson.fromJson(req.body(), new ArrayList<Stavka>() {
 				private static final long serialVersionUID = 1L;
 			}.getClass().getGenericSuperclass());
 			for (Stavka stavka : stavke) {

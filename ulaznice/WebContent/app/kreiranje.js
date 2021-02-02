@@ -9,68 +9,68 @@ Vue.component("kreiranje", {
 		}
 	},
 	template: ` 
-	<div>
-		<h2>Nova manifestacija</h2>
-		<div class="forma">
-			<div style="float:left;">
-			<form id="manifForm">
-				<table>
-					<tr>
-						<td><label>Naziv:</label></td>
-						<td><input type="text" v-model="manifestacija.naziv" required/></td>
-					</tr>
-					<tr>
-						<td><label>Tip:</label></td>
-						<td><input list="tipovi" type="text" v-model="manifestacija.tip" required/>
-							<datalist id="tipovi">
-							    <option v-for="t in tipovi">{{t}}</option>
-						  	</datalist>
+<div>
+	<h2>Nova manifestacija</h2>
+	<div class="forma">
+		<div style="float:left;">
+		<form id="manifForm">
+			<table>
+				<tr>
+					<td><label>Naziv:</label></td>
+					<td><input type="text" v-model="manifestacija.naziv" required/></td>
+				</tr>
+				<tr>
+					<td><label>Tip:</label></td>
+					<td><input list="tipovi" type="text" v-model="manifestacija.tip" required/>
+						<datalist id="tipovi">
+						    <option v-for="t in tipovi">{{t}}</option>
+					  	</datalist>
+					</td>
+				</tr>
+				<tr>
+					<td><label>Broj mesta:</label></td>
+					<td><input type="number" v-model="manifestacija.brojMesta" min="10" max="5000" required></td>
+				</tr>
+				<tr>
+					<td><label>Datum odrzavanja:</label></td>
+					<td><input type="datetime-local" v-model="manifestacija.datumVreme" required/></td>
+				</tr>
+				<tr>
+					<td><label>Cena karte:</label></td>
+					<td><input type="number" v-model="manifestacija.cenaKarte" min="10" max="20000" step="0.1" required></td>
+				</tr>
+				<tr>
+					<td><label>Lokacija:</label></td>
+					<td><input type="number" v-model="lokacija.geoDuzina" 
+							placeholder="Geo duzina" min="-90" max="90" step="0.001" style="width:70px;" required>
+						<input type="number" v-model="lokacija.geoSirina" 
+							placeholder="Geo sirina" min="-180" max="180" step="0.001" style="width:70px;" required><br>
+						<input type="text" v-model="lokacija.naziv" placeholder="Naziv" required/><br>
+						<input type="text" v-model="lokacija.adresa" placeholder="Adresa" required/><br>
+						<input type="text" v-model="lokacija.mesto" placeholder="Mesto" required/><br>
+						<input type="text" v-model="lokacija.postBroj" placeholder="Postanski broj" required/><br>
 						</td>
-					</tr>
-					<tr>
-						<td><label>Broj mesta:</label></td>
-						<td><input type="number" v-model="manifestacija.brojMesta" min="10" max="5000" required></td>
-					</tr>
-					<tr>
-						<td><label>Datum odrzavanja:</label></td>
-						<td><input type="datetime-local" v-model="manifestacija.datumVreme" required/></td>
-					</tr>
-					<tr>
-						<td><label>Cena karte:</label></td>
-						<td><input type="number" v-model="manifestacija.cenaKarte" min="10" max="20000" step="0.1" required></td>
-					</tr>
-					<tr>
-						<td><label>Lokacija:</label></td>
-						<td><input type="number" v-model="lokacija.geoDuzina" 
-								placeholder="Geo duzina" min="-90" max="90" step="0.001" style="width:70px;" required>
-							<input type="number" v-model="lokacija.geoSirina" 
-								placeholder="Geo sirina" min="-180" max="180" step="0.001" style="width:70px;" required><br>
-							<input type="text" v-model="lokacija.naziv" placeholder="Naziv" required/><br>
-							<input type="text" v-model="lokacija.adresa" placeholder="Adresa" required/><br>
-							<input type="text" v-model="lokacija.mesto" placeholder="Mesto" required/><br>
-							<input type="text" v-model="lokacija.postBroj" placeholder="Postanski broj" required/><br>
-							</td>
-					</tr>
-					<tr>
-						<td><label>Poster:</label></td>
-						<td>
-							<input type="file" ref="file" accept="image/*" v-on:change="onFileSelected()"/>
-						</td>
-					</tr>
-					<tr>
-						<td></td>
-						<td><button v-on:click="kreiraj()">Kreiraj</button></td>
-					</tr>
-				</table>
-			</form>
-			</div>
-			<div style="margin-left: 50px;">
-				<div id="map" class="map"></div>
-				<input type="text" id="search" placeholder="Pronadji..."/>
-				<button v-on:click="pronadjiLokaciju()">OK</button>
-			</div>
+				</tr>
+				<tr>
+					<td><label>Poster:</label></td>
+					<td>
+						<input type="file" ref="file" accept="image/*" v-on:change="onFileSelected()"/>
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><button v-on:click="kreiraj()">Kreiraj</button></td>
+				</tr>
+			</table>
+		</form>
+		</div>
+		<div style="margin-left: 50px;">
+			<div id="map" class="map"></div><br>
+			<input type="text" id="search" placeholder="Pronadji..."/>
+			<button v-on:click="pronadjiLokaciju()">OK</button>
 		</div>
 	</div>
+</div>
 `
 	,
 	methods: {
@@ -121,15 +121,11 @@ Vue.component("kreiranje", {
 						'EPSG:4326', 'EPSG:3857'
 					));
 					this.map.getView().setZoom(15);
-					var layer = new ol.layer.Vector({
-						source: new ol.source.Vector({
-							features: [
-								new ol.Feature({
-									geometry: new ol.geom.Point(ol.proj.fromLonLat([this.lokacija.geoDuzina, this.lokacija.geoSirina]))
-								})
-							]
-						})
+					var marker = new ol.Feature({
+						geometry: new ol.geom.Point(ol.proj.fromLonLat([this.lokacija.geoDuzina, this.lokacija.geoSirina]))
 					});
+					marker.setStyle(new ol.style.Style({image: new ol.style.Icon(({crossOrigin: 'anonymous', src: 'marker.png'}))}));
+					var layer = new ol.layer.Vector({source: new ol.source.Vector({features: [marker]})});
 					this.map.addLayer(layer);
 				}
 			})

@@ -29,7 +29,7 @@ input:invalid {
   	background-color: white;
 }
 
-table.korisnik-info > tr > td {
+table.info > tr > td {
     border-bottom: 1px solid black;
     padding: 5px;
     padding-right: 20px;
@@ -39,6 +39,7 @@ table.korisnik-info > tr > td {
 	height: 300px;
 	width: 500px;
 	border: 2px solid black;
+	display: inline-block;
 }
 
 .manifestacija-mali {
@@ -54,7 +55,41 @@ table.korisnik-info > tr > td {
 	border: 2px solid orange;
 }
 
+.poster {
+	margin: 20px;
+	float: left;
+	width: 400px;
+	height: 600px;
+}
+
 .komb-pretraga {
-	padding: 10px;
+	padding: 20px;
 	background-color: lightgray;
 }
+
+
+.dropbtn {
+	background-color: orange;
+	color: white;
+	padding: 5px;
+	border: none;
+}
+
+.dropdown {
+	position: relative;
+	display: inline-block;
+	margin: 3px;
+}
+
+.dropdown-content {
+	display: none;
+	position: absolute;
+	background-color: #f1f1f1;
+	width: 180px;
+	max-height: 200px;
+	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+	z-index: 1;
+	overflow: scroll;
+}
+
+.dropdown:hover .dropdown-content {display: block;}

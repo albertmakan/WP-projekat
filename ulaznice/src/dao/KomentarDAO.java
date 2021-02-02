@@ -27,6 +27,7 @@ public class KomentarDAO {
 		try (BufferedReader br = new BufferedReader(new FileReader(putanjaFajla))) {
 			String line;
 			while ((line = br.readLine()) != null) {
+				if (line.length() < 3) continue;
 				Komentar komentar = gson.fromJson(line, Komentar.class);
 				if (komentari.get(komentar.getIdManifestacije()) == null)
 					komentari.put(komentar.getIdManifestacije(), new ArrayList<Komentar>());

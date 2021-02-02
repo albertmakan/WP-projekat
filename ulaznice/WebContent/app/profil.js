@@ -18,7 +18,7 @@ Vue.component("profil", {
 			<p id="tip"></p>
 		</div>
 		<div style="padding:10px;">
-		  <table class="korisnik-info">
+		  <table class="info">
 		  	<tr><td>Pol:</td><td>{{korisnik.pol}}</td></tr>
 		  	<tr><td>Datum rodjenja:</td><td>{{dateFormat(this.korisnik.datumRodjenja,"DD.MM.YYYY.")}}</td></tr>
 		  	<tr><td>Uloga:</td><td>{{korisnik.uloga}}</td></tr>

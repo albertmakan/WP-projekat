@@ -32,6 +32,7 @@ public class KartaDAO {
 		try (BufferedReader br = new BufferedReader(new FileReader(putanjaFajla))) {
 			String line;
 			while ((line = br.readLine()) != null) {
+				if (line.length() < 3) continue;
 				Karta karta = gson.fromJson(line, Karta.class);
 				karte.put(karta.getId(), karta);
 			}
