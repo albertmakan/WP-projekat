@@ -35,12 +35,23 @@ Vue.component("prijava", {
     		axios
     		.post("/login", k)
     		.then(response => {
-				if (response.data == "OK") {
+				if (response.data == "KUPAC") {
 					window.location.href = "#/";
-					document.getElementById("korisnik_link").innerHTML = "<a href='#/profil'>"+korisnik.korisnickoIme+"</a>";
-				} else {
-					toast(response.data);
-				}
+					//document.getElementById("aktivnosti").innerHTML = "probaKupac";
+					document.getElementById("korisnik_link").innerHTML = "<a href='#/profil'>"+korisnik.korisnickoIme+"</a>"+
+																		"<a href='javascript:logout()'>Odjava</a>";
+				} else if (response.data == "PRODAVAC") {
+					window.location.href = "#/";
+					document.getElementById("aktivnosti").innerHTML = "<a href='#/kreiranje'>Kreiranje manifestacije</a>";
+					document.getElementById("korisnik_link").innerHTML = "<a href='#/profil'>"+korisnik.korisnickoIme+"</a>"+
+																		"<a href='javascript:logout()'>Odjava</a>";
+				} else if (response.data == "ADMIN") {
+					window.location.href = "#/";
+					document.getElementById("aktivnosti").innerHTML = "<a href='#/registracija'>Registracija prodavca</a>"+
+																		"<a href='#'>Pregled korisnika</a>";
+					document.getElementById("korisnik_link").innerHTML = "<a href='#/profil'>"+korisnik.korisnickoIme+"</a>"+
+																		"<a href='javascript:logout()'>Odjava</a>";
+				} else toast(response.data);
 			});
     	},
 	},

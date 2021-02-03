@@ -32,22 +32,22 @@ Vue.component("manifestacija", {
 			<tr>
 				<td>Regular</td><td>{{manifestacija.cenaKarte}} din</td>
 				<td>
-					<input type="number" size="3" min="1" :max=manifestacija.brojKarata> 
-					<button v-on:click="">Dodaj</button>
+					<input id="REGULAR" type="number" size="3" min="1" :max=manifestacija.brojKarata value="0"> 
+					<button v-on:click="dodajUKorpu('REGULAR')">Dodaj</button>
 				</td>
 			</tr>
 			<tr>
 				<td>Fan pit</td><td>{{manifestacija.cenaKarte*2}} din</td>
 				<td>
-					<input type="number" size="3" min="1" :max=manifestacija.brojKarata> 
-					<button v-on:click="">Dodaj</button>
+					<input id="FAN_PIT" type="number" size="3" min="1" :max=manifestacija.brojKarata value="0"> 
+					<button v-on:click="dodajUKorpu('FAN_PIT')">Dodaj</button>
 				</td>
 			</tr>
 			<tr>
 				<td>VIP</td><td>{{manifestacija.cenaKarte*4}} din</td>
 				<td>
-					<input type="number" size="3" min="1" :max=manifestacija.brojKarata> 
-					<button v-on:click="">Dodaj</button>
+					<input id="VIP" type="number" size="3" min="1" :max=manifestacija.brojKarata value="0"> 
+					<button v-on:click="dodajUKorpu('VIP')">Dodaj</button>
 				</td>
 			</tr>
 		</table>
@@ -66,6 +66,12 @@ Vue.component("manifestacija", {
 		dateFormat: function(value, format) {
 			return moment(value).format(format);
 		},
+		dodajUKorpu: function(tip) {
+			let kom = document.getElementById(tip).value;
+			axios
+				.post("/dodajUKorpu", {idManifestacije: this.manifestacija.id, komada: kom, tipKarte: tip})
+				.then(response => {toast(response.data)});
+		}
 	},
 	mounted() {
 		axios

@@ -38,6 +38,8 @@ import dao.KartaDAO;
 import dao.KomentarDAO;
 import dao.KorisnikDAO;
 import dao.ManifestacijaDAO;
+import spark.Request;
+import spark.Session;
 
 public class SparkUlazniceMain {
 	private static final String contextPath = "d:\\Peti_semestar\\Veb programiranje\\WP-projekat\\ulaznice\\WebContent";
@@ -73,7 +75,7 @@ public class SparkUlazniceMain {
 			if (ulogovanKorisnik.isBlokiran())
 				return "Korisnik je blokiran";
 			req.session().attribute("korisnik", ulogovanKorisnik);
-			return "OK";
+			return ulogovanKorisnik.getUloga().toString();
 		});
 
 		post("/registracija", (req, res) -> {
@@ -87,9 +89,9 @@ public class SparkUlazniceMain {
 			return "Vec postoji korisnik sa tim korisnickim imenom.";
 		});
 
-		post("/logout", (req, res) -> {
+		get("/logout", (req, res) -> {
 			req.session().invalidate();
-			return "OK";
+			return true;
 		});
 
 		get("/trenutniKorisnik", (req, res) -> {
@@ -144,7 +146,7 @@ public class SparkUlazniceMain {
 			Manifestacija m = gson.fromJson(req.body(), Manifestacija.class);
 			Manifestacija manifestacija = manifestacijaDAO.kreirajManifestaciju(prodavac, m.getNaziv(), m.getTip(),
 					m.getBrojMesta(), m.getDatumVreme(), m.getCenaKarte(), m.getLokacija());
-			//korisnikDAO.sacuvajKorisnika(prodavac);
+			korisnikDAO.sacuvajKorisnika(prodavac);
 			return gson.toJson(manifestacija);
 		});
 
@@ -218,7 +220,7 @@ public class SparkUlazniceMain {
 
 		post("/manifestacije/dodajKomentar", (req, res) -> {
 			res.type("application/json");
-			Kupac kupac = req.attribute("korisnik");
+			Kupac kupac = req.session().attribute("korisnik");
 			Komentar k = gson.fromJson(req.body(), Komentar.class);
 			return gson.toJson(komentarDAO.dodajKomentar(kupac.getKorisnickoIme(), k.getIdManifestacije(), k.getTekst(),
 					k.getOcena()));
@@ -228,6 +230,26 @@ public class SparkUlazniceMain {
 			Komentar k = gson.fromJson(req.body(), Komentar.class);
 			komentarDAO.odobri(k);
 			return "OK";
+		});
+
+		// --------------------------------------------------------------------------------
+		
+		post("/dodajUKorpu", (req, res) -> {
+			Stavka s = gson.fromJson(req.body(), Stavka.class);
+			Kupac kupac = req.session().attribute("korisnik");
+			if (kupac == null) return "Nije OK";
+			mojaKorpa(req).add(new Stavka(manifestacijaDAO.getManifestacija(s.getIdManifestacije()), kupac, s.getTipKarte(), s.getKomada()));
+			return "OK";
+		});
+		
+		get("/isprazniKorpu", (req, res) -> {
+			mojaKorpa(req).clear();
+			return "OK";
+		});
+		
+		get("/korpa", (req, res) -> {
+			res.type("application/json");
+			return gson.toJson(mojaKorpa(req));
 		});
 
 		// --------------------------------------------------------------------------------
@@ -278,6 +300,7 @@ public class SparkUlazniceMain {
 			manifestacijaDAO.sacuvajManifestacije();
 			korisnikDAO.azurirajTipKupca(kupac);
 			korisnikDAO.sacuvajKorisnika(kupac);
+			mojaKorpa(req).clear();
 			return "OK";
 		});
 
@@ -290,5 +313,15 @@ public class SparkUlazniceMain {
 			korisnikDAO.sacuvajKorisnika(kupac);
 			return gson.toJson(karta);
 		});
+	}
+	
+	private static ArrayList<Stavka> mojaKorpa(Request req) {
+		Session ss = req.session(true);
+		ArrayList<Stavka> korpa = ss.attribute("korpa"); 
+		if (korpa == null) {
+			korpa = new ArrayList<Stavka>();
+			ss.attribute("korpa", korpa);
+		}
+		return korpa;
 	}
 }

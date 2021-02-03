@@ -6,12 +6,67 @@ h1 {
 	display: inline-block;
 }
 
-div.header {
+.navbar {
 	color: orange;
 	background-color: gray;
 	padding: 1px;
 	padding-left: 10px;
 	padding-right: 10px;
+}
+
+.navbar a {
+	float: right;
+	font-size: 16px;
+	color: white;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
+}
+
+.menu {
+	float: right;
+	overflow: hidden;
+}
+
+.menu .menubtn {
+	font-size: 16px;
+	border: none;
+	outline: none;
+	color: white;
+	padding: 14px 16px;
+	background-color: inherit;
+	font-family: inherit;
+	margin: 0;
+}
+
+.navbar a:hover, .menu:hover .menubtn {
+	background-color: orange;
+}
+
+.menu-content {
+	display: none;
+	position: absolute;
+	background-color: #f9f9f9;
+	min-width: 160px;
+	box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+	z-index: 1;
+}
+
+.menu-content a {
+	float: none;
+	color: black;
+	padding: 12px 16px;
+	text-decoration: none;
+	display: block;
+	text-align: left;
+}
+
+.menu-content a:hover {
+	background-color: #ddd;
+}
+
+.menu:hover .menu-content {
+	display: block;
 }
 
 span.korisnik {
@@ -26,13 +81,13 @@ div.forma {
 }
 
 input:invalid {
-  	background-color: white;
+	background-color: white;
 }
 
-table.info > tr > td {
-    border-bottom: 1px solid black;
-    padding: 5px;
-    padding-right: 20px;
+table.info>tr>td {
+	border-bottom: 1px solid black;
+	padding: 5px;
+	padding-right: 20px;
 }
 
 .map {
@@ -67,7 +122,6 @@ table.info > tr > td {
 	background-color: lightgray;
 }
 
-
 .dropbtn {
 	background-color: orange;
 	color: white;
@@ -87,9 +141,35 @@ table.info > tr > td {
 	background-color: #f1f1f1;
 	width: 180px;
 	max-height: 200px;
-	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+	box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
 	z-index: 1;
 	overflow: scroll;
 }
 
-.dropdown:hover .dropdown-content {display: block;}
+.dropdown:hover .dropdown-content {
+	display: block;
+}
+
+.collapsible {
+	background-color: #777;
+	color: white;
+	cursor: pointer;
+	padding: 18px;
+	width: 100%;
+	border: none;
+	text-align: left;
+	outline: none;
+	font-size: 15px;
+}
+
+.active, .collapsible:hover {
+	background-color: #555;
+}
+
+.content {
+	padding: 0 18px;
+	display: none;
+	max-height: 200px;
+	overflow: scroll;
+	background-color: #f1f1f1;
+}

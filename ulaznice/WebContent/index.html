@@ -1,40 +1,55 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-	<title>Ulaznice.rs</title>
-	<link href="css/main.css" rel="stylesheet" />
-	<link href="css/toast.css" rel="stylesheet" />
-	<link href="css/ol.css" rel="stylesheet" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Ulaznice.rs</title>
+<link href="css/main.css" rel="stylesheet" />
+<link href="css/toast.css" rel="stylesheet" />
+<link href="css/ol.css" rel="stylesheet" />
 </head>
 <body>
 
-<div class="header">
-	<h1>ulaznice</h1>
-	<span class="korisnik" id="korisnik_link"><a href="#/prijava">Prijava</a></span>
-	
-</div>
-<a href="#/kreiranje">Kreiraj manif proba</a>
+	<div class="navbar">
+		<h1>ulaznice</h1>
+		<span id="korisnik_link"><a href="#/prijava">Prijava</a></span>
+		<div class="menu">
+			<button class="menubtn">Menu</button>
+			<div class="menu-content" id="aktivnosti"></div>
+		</div>
 
-<div id="ulaznice">
-	<router-view></router-view>
-</div>
+	</div>
 
-<script src="js/vue.js"></script>
-<script src="js/vue-router.js"></script>
-<script src="js/axios.js"></script>
-<script src="js/jquery.min.js"></script>
-<script src="js/moment.min.js"></script>
-<script src="js/toast.js"></script>
-<script src="js/ol.js"></script>
+	<div id="ulaznice">
+		<router-view></router-view>
+	</div>
 
-<script src="app/prijava.js"></script>
-<script src="app/pocetna.js"></script>
-<script src="app/registracija.js"></script>
-<script src="app/profil.js"></script>
-<script src="app/kreiranje.js"></script>
-<script src="app/manifestacija.js"></script>
-<script src="app/app.js"></script>
+	<script type="text/javascript">
+		function logout() {
+			axios
+			.get("/logout")
+			.then(response => {
+				window.location.href = "#/";
+				document.getElementById("aktivnosti").innerHTML = "";
+				document.getElementById("korisnik_link").innerHTML = "<a href='#/prijava'>Prijava</a>"
+			});
+		}
+	</script>
+
+	<script src="js/vue.js"></script>
+	<script src="js/vue-router.js"></script>
+	<script src="js/axios.js"></script>
+	<script src="js/jquery.min.js"></script>
+	<script src="js/moment.min.js"></script>
+	<script src="js/toast.js"></script>
+	<script src="js/ol.js"></script>
+
+	<script src="app/prijava.js"></script>
+	<script src="app/pocetna.js"></script>
+	<script src="app/registracija.js"></script>
+	<script src="app/profil.js"></script>
+	<script src="app/kreiranje.js"></script>
+	<script src="app/manifestacija.js"></script>
+	<script src="app/app.js"></script>
 
 </body>
 </html>

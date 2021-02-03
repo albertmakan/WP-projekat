@@ -63,7 +63,8 @@ Vue.component("registracija", {
 				if (response.data == "OK") {
 					alert("Uspesna registracija")
 					window.location.href = "#/";
-					document.getElementById("korisnik_link").innerHTML = "<a href='#/profil'>"+korisnik.korisnickoIme+"</a>";
+					document.getElementById("korisnik_link").innerHTML = "<a href='#/profil'>"+korisnik.korisnickoIme+"</a>"+
+																		"<a href='javascript:logout()'>Odjava</a>";
 				} else {
 					toast(response.data);
 				}

@@ -23,7 +23,7 @@ public class KartaDAO {
 	
 	public KartaDAO(String contextPath) {
 		karte = new HashMap<String, Karta>();
-		putanjaFajla = contextPath+"/data/karte.json";
+		putanjaFajla = contextPath+"/data/karte.txt";
 		ucitajKarte();
 	}
 

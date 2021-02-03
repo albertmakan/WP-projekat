@@ -108,7 +108,7 @@ public class ManifestacijaDAO {
 		else
 			mesta.put(mesto, mesta.get(mesto) + 1);
 		tipovi.add(m.getTip());
-		//prodavac.addManifestacija(m.getId());
+		prodavac.addManifestacija(m.getId());
 		sacuvajManifestacije();
 		return m;
 	}
