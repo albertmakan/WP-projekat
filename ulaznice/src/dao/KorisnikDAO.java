@@ -156,6 +156,11 @@ public class KorisnikDAO {
 		return korisnici.get(korisnickoIme);
 	}
 	
+	public Collection<Korisnik> getKorisnike() {
+		return korisnici.values();
+	}
+	
+	
 	public Collection<Korisnik> pretraga(String tekst, int kriterijum) {
 		ArrayList<Korisnik> rezultat = new ArrayList<Korisnik>();
 		if (kriterijum == 1) {

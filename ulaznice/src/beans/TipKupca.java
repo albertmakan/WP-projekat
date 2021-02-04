@@ -1,7 +1,10 @@
 package beans;
 
+import com.google.gson.annotations.Expose;
+
 public class TipKupca {
 	public enum ImeTipa {ZLATNI, SREBRNI, BRONZANI, ZELENI}
+	@Expose
 	private ImeTipa imeTipa;
 	private int popust;
 	private int trazeniBrojBodova;

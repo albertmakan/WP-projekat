@@ -4,6 +4,7 @@ const Registracija = { template: '<registracija></registracija>' }
 const Profil = { template: '<profil></profil>' }
 const Kreiranje = { template: '<kreiranje></kreiranje>' }
 const Manifestacija = { template: '<manifestacija></manifestacija>' }
+const Korisnici = { template: '<korisnici></korisnici>' }
 
 
 const router = new VueRouter({
@@ -15,6 +16,7 @@ const router = new VueRouter({
 		{ path: '/profil', component: Profil },
 		{ path: '/kreiranje', component: Kreiranje },
 		{ path: '/manifestacija/:id', component: Manifestacija },
+		{ path: '/korisnici', component: Korisnici },
 	]
 });
 

@@ -2,13 +2,19 @@ package beans;
 
 import java.util.Date;
 
+import com.google.gson.annotations.Expose;
+
 public class Korisnik {
 	public enum Pol {M, Z}
 	public enum Uloga {ADMIN, PRODAVAC, KUPAC}
-	private String korisnickoIme, lozinka, ime, prezime;
+	@Expose
+	private String korisnickoIme, ime, prezime;
+	private String lozinka;
 	private Pol pol;
 	private Date datumRodjenja;
+	@Expose
 	private Uloga uloga;
+	@Expose
 	private boolean blokiran;
 	
 	public Korisnik() {

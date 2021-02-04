@@ -3,9 +3,13 @@ package beans;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.google.gson.annotations.Expose;
+
 public class Kupac extends Korisnik {
 	private ArrayList<String> sveKarte;	// identifikatori karata
+	@Expose
 	private int bodovi;
+	@Expose
 	private TipKupca tip;
 	
 	public Kupac() {

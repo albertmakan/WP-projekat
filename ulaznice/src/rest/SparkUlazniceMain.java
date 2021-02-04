@@ -58,6 +58,7 @@ public class SparkUlazniceMain {
 			return new JsonPrimitive(date.getTime());
 		}
 	}).create();
+	private static Gson filteredGson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 	
 	private static boolean isEmptyOrNull(String str) {
 		return str == null || str.trim().isEmpty();
@@ -100,17 +101,22 @@ public class SparkUlazniceMain {
 		});
 
 		// --------------------------------------------------------------------------------
+		
+		get("/korisnici/", (req, res) -> {
+			res.type("application/json");
+			return filteredGson.toJson(korisnikDAO.getKorisnike());
+		});
 
 		get("/korisnici/:korisnickoIme", (req, res) -> {
 			res.type("application/json");
 			return gson.toJson(korisnikDAO.getKorisnik(req.params("korisnickoIme")));
 		});
 
-		get("/korisnici/pretraga", (req, res) -> {
+		get("/korisnici/pretraga/", (req, res) -> {
 			res.type("application/json");
 			String tekst = req.queryParams("ime");
 			int kriterijum = Integer.parseInt(req.queryParams("krit"));
-			return gson.toJson(korisnikDAO.pretraga(tekst, kriterijum));
+			return filteredGson.toJson(korisnikDAO.pretraga(tekst, kriterijum));
 		});
 
 		post("/korisnici/registracijaProdavca", (req, res) -> {

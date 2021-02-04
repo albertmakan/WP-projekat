@@ -6,6 +6,10 @@ h1 {
 	display: inline-block;
 }
 
+th {
+  cursor:pointer;
+}
+
 .navbar {
 	color: orange;
 	background-color: gray;
