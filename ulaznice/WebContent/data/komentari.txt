@@ -1,0 +1,2 @@
+{"kupac":"albmak","idManifestacije":0,"tekst":"bilo je dobro.","ocena":5,"odobren":true}
+{"kupac":"albmak","idManifestacije":0,"tekst":"stvarno","ocena":4,"odobren":true}

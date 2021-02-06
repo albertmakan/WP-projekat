@@ -92,6 +92,7 @@ Vue.component("kreiranje", {
 			this.selectedFile = this.$refs.file.files[0];
 		},
 		uploadPoster: function(manif_id) {
+			if (!this.selectedFile) return;
 			const fd = new FormData();
 			fd.append('file', this.selectedFile);
 			axios.post("/manifestacije/poster/"+manif_id, fd)

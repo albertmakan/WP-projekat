@@ -7,7 +7,8 @@ Vue.component("manifestacija", {
 			korisnik: {},
 			komentar: {},
 			mozeOstavitiKomentar: false,
-			izabranKoment: {}
+			izabranKoment: {},
+			izmena: false, izmenjeniPodaci: {}, selectedFile: null
 		}
 	},
 	template: ` 
@@ -25,6 +26,7 @@ Vue.component("manifestacija", {
 				<tr><td>Broj mesta: </td><td>{{manifestacija.brojMesta}}</td></tr>
 				<tr><td>Preostali broj katrata: </td><td>{{manifestacija.brojKarata}}</td></tr>
 				<tr><td>Status: </td><td>{{manifestacija.aktivna? "aktivan":"neaktivan"}}</td></tr>
+				<tr v-if="komentari.length>0"><td>Ocena: </td><td>{{prosek}}</td></tr>
 			</table>
 			<div style="margin:20px;">
 				<div id="map" class="map"></div>
@@ -81,6 +83,25 @@ Vue.component("manifestacija", {
 	</div>
 	<div v-else-if="korisnik.uloga=='ADMIN'">
 		<button v-on:click="odobri()">Odobri manifestaciju</button>
+	</div>
+	<div v-if="mozeDaMenja">
+		<button @click="izmena=true">Izmeni podatke</button>
+		<div v-if="izmena">
+			<table>
+				<tr><td><label>Nov naziv:</label></td>
+					<td><input type="text" v-model="izmenjeniPodaci.naziv"/></td></tr>
+				<tr><td><label>Broj mesta:</label></td>
+					<td><input type="number" v-model="izmenjeniPodaci.brojMesta" min="10" max="5000"/></td></tr>
+				<tr><td><label>Datum odrzavanja:</label></td>
+					<td><input type="datetime-local" v-model="izmenjeniPodaci.datumVreme"/></td></tr>
+				<tr><td><label>Cena karte:</label></td>
+					<td><input type="number" v-model="izmenjeniPodaci.cenaKarte" min="10" max="20000" step="0.1"/></td></tr>
+				<tr><td><label>Poster:</label></td>
+					<td><input type="file" ref="file" accept="image/*" v-on:change="onFileSelected()"/></td></tr>
+				<tr><td><button @click="izmena=false">Odustani</button></td>
+					<td><button @click="sacuvajPromene()">Sacuvaj</button></td></tr>
+			</table>
+		</div>
 	</div>
 	
 	<div class="komentari">
@@ -169,7 +190,24 @@ Vue.component("manifestacija", {
 					toast("komentar je odobren");
 					this.izabranKoment = {}
 				})
-		}
+		},
+		sacuvajPromene: function() {
+			if (confirm('Da li ste sigurni?')) {
+				this.izmenjeniPodaci.datumVreme = new Date(this.izmenjeniPodaci.dv).getTime();
+				axios
+					.put("/manifestacije/promenaPodataka", this.izmenjeniPodaci)
+					.then(response => {this.manifestacija = response.data;})
+				this.izmena = false;
+				if (!this.selectedFile) return;
+				const fd = new FormData();
+				fd.append('file', this.selectedFile);
+				axios.post("/manifestacije/poster/"+this.$route.params.id, fd)
+				.then(response => {toast(response.data)});
+			}
+		},
+		onFileSelected: function() {
+			this.selectedFile = this.$refs.file.files[0];
+		},
 	},
 	mounted() {
 		axios
@@ -182,7 +220,8 @@ Vue.component("manifestacija", {
 			.get("/manifestacije/" + this.$route.params.id)
 			.then(response => {
 				this.manifestacija = response.data;
-
+				this.izmenjeniPodaci = {id: this.manifestacija.id, naziv: this.manifestacija.naziv, brojMesta: this.manifestacija.brojMesta,
+										dv:this.dateFormat(this.manifestacija.datumVreme, "YYYY-MM-DD HH:mm"), cenaKarte: this.manifestacija.cenaKarte};
 				var marker = new ol.Feature({
 					geometry: new ol.geom.Point(ol.proj.fromLonLat([this.manifestacija.lokacija.geoDuzina, this.manifestacija.lokacija.geoSirina]))
 				});
@@ -209,4 +248,19 @@ Vue.component("manifestacija", {
 			.get("/moguDaOstavimKomentar/"+this.$route.params.id)
 			.then(response => {this.mozeOstavitiKomentar=response.data;})
 	},
+	computed: {
+		prosek: function() {
+			let sum = 0;
+			for (k of this.komentari)
+				sum += k.ocena;
+			return (sum+.0)/this.komentari.length;
+		},
+		mozeDaMenja: function() {
+			if (!this.karte)
+				if (this.korisnik.uloga == 'PRODAVAC')
+					if (this.korisnik.manifestacije.includes(this.manifestacija.id))
+						return true;
+			return false;
+		}
+	}
 });

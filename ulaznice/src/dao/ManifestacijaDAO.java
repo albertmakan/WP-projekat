@@ -130,6 +130,7 @@ public class ManifestacijaDAO {
 			manifestacija.setCenaKarte(noviPodaci.getCenaKarte());
 		if (noviPodaci.getLokacija() != null)
 			manifestacija.setLokacija(noviPodaci.getLokacija());
+		sacuvajManifestacije();
 		return manifestacija;
 	}
 	
