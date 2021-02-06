@@ -99,7 +99,7 @@ public class KartaDAO {
 			cena *= 2;
 		else if (tip == TipKarte.VIP)
 			cena *= 4;
-		cena -= kupac.getTip().getPopust()*cena;
+		cena -= kupac.getTip().getPopust()/100.0*cena;
 		for (int i = 0; i < kom; i++) {
 			String id = manifestacija.getNaziv().substring(0, 10-len).toUpperCase().replace(' ', '_')
 					+ String.format("%0"+len+"d", manifestacija.getBrojMesta()-manifestacija.getBrojKarata());

@@ -9,31 +9,29 @@
 </head>
 <body>
 
-	<div class="navbar">
-		<h1>ulaznice</h1>
-		<span id="korisnik_link"><a href="#/prijava">Prijava</a></span>
-		<div class="menu">
-			<button class="menubtn">Menu</button>
-			<div class="menu-content" id="aktivnosti"></div>
-		</div>
-		<a href="#/">Pocetna</a>
-	</div>
-
 	<div id="ulaznice">
+	
+		<div class="navbar">
+			<h1>ulaznice</h1>
+			<span v-if="ulogovanKorisnik">
+				<a href="#/profil">{{ulogovanKorisnik.korisnickoIme}}</a>
+				<a href="#" @click="logout()">Odjava</a>
+			</span>
+			<span v-else>
+				<a href="#/prijava">Prijava</a>
+			</span>
+			<div class="menu" v-if="ulogovanKorisnik">
+				<button class="menubtn">Menu</button>
+				<div class="menu-content" id="aktivnosti">
+					<a v-if="ulogovanKorisnik.uloga=='ADMIN'" href='#/registracija'>Registracija prodavca</a>
+					<a v-if="ulogovanKorisnik.uloga=='ADMIN'" href='#/korisnici'>Pregled korisnika</a>
+					<a v-if="ulogovanKorisnik.uloga=='PRODAVAC'" href='#/kreiranje'>Kreiranje manifestacije</a>
+				</div>
+			</div>
+			<a href="#/">Pocetna</a>
+		</div>
 		<router-view></router-view>
 	</div>
-
-	<script type="text/javascript">
-		function logout() {
-			axios
-			.get("/logout")
-			.then(response => {
-				window.location.href = "#/";
-				document.getElementById("aktivnosti").innerHTML = "";
-				document.getElementById("korisnik_link").innerHTML = "<a href='#/prijava'>Prijava</a>"
-			});
-		}
-	</script>
 
 	<script src="js/vue.js"></script>
 	<script src="js/vue-router.js"></script>

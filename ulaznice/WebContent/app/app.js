@@ -22,5 +22,36 @@ const router = new VueRouter({
 
 var app = new Vue({
 	router,
-	el: '#ulaznice'
+	el: '#ulaznice',
+	data: {
+		ulogovanKorisnik: {}
+	},
+	mounted() {
+		this.$root.$on('login', (text) => {
+			toast("HELLO")
+			if (text != "OK") toast(text);
+			else
+			axios
+				.get("/trenutniKorisnik")
+				.then(response => {
+					this.ulogovanKorisnik = response.data;
+					window.location.href = "#/";
+				})
+		});
+		axios
+			.get("/trenutniKorisnik")
+			.then(response => {
+				this.ulogovanKorisnik = response.data;
+			})
+	},
+	methods: {
+		logout: function() {
+			axios
+				.get("/logout")
+				.then(response => {
+					this.ulogovanKorisnik = null;
+					window.location.href = "#/";
+				});
+		}
+	}
 });

@@ -5,7 +5,8 @@ Vue.component("korisnici", {
 			kritPretrage: "0", ime: "",
 			krit: "", smer: "1",
 			izabraneUloge: [], izabraniTipovi: [], izabranKupac: false,
-			filtrirani: []
+			filtrirani: [],
+			izabranKorisnik: {}
 		}
 	},
 	template: ` 
@@ -35,8 +36,10 @@ Vue.component("korisnici", {
 			<input type="radio" id="prezime" v-model="kritPretrage" value="2">
 			<label for="prezime">prezime</label>
 		</div>
+		<button style="float:right;" @click="blokiraj()" :disabled="izabranKorisnik.korisnickoIme==undefined || izabranKorisnik.uloga=='ADMIN'">Blokiraj korisnika</button>
+		<button style="float:right;" @click="sumnjivi()">Prikaz sumnjivih</button>
 	</div>
-	<table border="1">
+	<table border="1" class="korisnici">
 	  	<tr bgcolor="lightgrey">
 			<th @click="sort('korisnickoIme')">Korisnicko ime</th>
 			<th @click="sort('ime')">Ime</th>
@@ -44,16 +47,14 @@ Vue.component("korisnici", {
 			<th>Uloga</th>
 			<th @click="sort('bodovi')">Bodovi</th>
 			<th>Tip</th>
-			<th></th>
 		</tr>
-		<tr v-for="k in sortirani">
+		<tr v-for="k in sortirani" @click="izabranKorisnik=k" :class="{selected: izabranKorisnik.korisnickoIme===k.korisnickoIme}">
 			<td>{{k.korisnickoIme}}</td>
 			<td>{{k.ime}}</td>
 			<td>{{k.prezime}}</td>
 			<td>{{k.uloga}}</td>
 			<td>{{k.bodovi}}</td>
 			<td>{{k.tip?k.tip.imeTipa:""}}</td>
-			<td><button @click="blokiraj(k.korisnickoIme)">Blokiraj</button></td>
 		</tr>
 	</table>
 </div>
@@ -86,12 +87,17 @@ Vue.component("korisnici", {
 		    	this.smer = this.smer==='1'?'-1':'1';
 		    this.krit = s;
 		},
-		blokiraj: function(ki) {
-			if (confirm('Da li ste sigurni da blokirate '+ki+'?')) {
+		blokiraj: function() {
+			if (confirm('Da li ste sigurni da blokirate '+this.izabranKorisnik.korisnickoIme+'?')) {
 				axios
-					.put("/korisnici/blokiranje",{korisnickoIme: ki})
+					.put("/korisnici/blokiranje", this.izabranKorisnik)
 					.then(response => {toast(response.data)})
 			}
+		},
+		sumnjivi: function() {
+			axios
+				.get("/korisnici/sumnjivi")
+				.then(response => {toast("Not implemented")})
 		}
 	},
 	computed: {

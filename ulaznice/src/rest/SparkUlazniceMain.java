@@ -32,6 +32,7 @@ import beans.Komentar;
 import beans.Korisnik;
 import beans.Kupac;
 import beans.Stavka;
+import beans.Korisnik.Uloga;
 import beans.Manifestacija;
 import beans.Prodavac;
 import dao.KartaDAO;
@@ -76,7 +77,7 @@ public class SparkUlazniceMain {
 			if (ulogovanKorisnik.isBlokiran())
 				return "Korisnik je blokiran";
 			req.session().attribute("korisnik", ulogovanKorisnik);
-			return ulogovanKorisnik.getUloga().toString();
+			return "OK";
 		});
 
 		post("/registracija", (req, res) -> {
@@ -120,10 +121,13 @@ public class SparkUlazniceMain {
 		});
 
 		post("/korisnici/registracijaProdavca", (req, res) -> {
-			res.type("application/json");
 			Korisnik k = gson.fromJson(req.body(), Korisnik.class);
-			return gson.toJson(korisnikDAO.registracijaProdavca(k.getIme(), k.getPrezime(), k.getKorisnickoIme(),
-					k.getLozinka(), k.getPol(), k.getDatumRodjenja()));
+			if (korisnikDAO.validnoKorisnickoIme(k.getKorisnickoIme())) {
+				korisnikDAO.registracijaProdavca(k.getIme(), k.getPrezime(), k.getKorisnickoIme(),
+					k.getLozinka(), k.getPol(), k.getDatumRodjenja());
+				return "OK";
+			}
+			return "Vec postoji korisnik sa tim korisnickim imenom.";
 		});
 
 		put("/korisnici/promenaPodataka", (req, res) -> {
@@ -318,6 +322,23 @@ public class SparkUlazniceMain {
 			korisnikDAO.azurirajTipKupca(kupac);
 			korisnikDAO.sacuvajKorisnika(kupac);
 			return gson.toJson(karta);
+		});
+		
+		get("/moguDaOstavimKomentar/:id", (req, res) -> {
+			res.type("application/json");
+			Korisnik k = req.session().attribute("korisnik");
+			Manifestacija m = manifestacijaDAO.getManifestacija(Integer.parseInt(req.params("id")));
+			if (k == null || m == null)
+				return false;
+			if (m.getDatumVreme().after(new Date()))
+				return false;
+			if (k.getUloga() != Uloga.KUPAC)
+				return false;
+			for (Karta karta : kartaDAO.getKarte((Kupac) k))
+				if (karta.getIdManifestacije() == m.getId())
+					if (!karta.isOdustanak())
+						return true;
+			return false;
 		});
 	}
 	

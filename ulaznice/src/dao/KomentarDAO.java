@@ -44,6 +44,8 @@ public class KomentarDAO {
 	
 	public Komentar dodajKomentar(String kupac, int idManifestacije, String tekst, int ocena) {
 		Komentar komentar = new Komentar(kupac, idManifestacije, tekst, ocena);
+		if (komentari.get(idManifestacije) == null)
+			komentari.put(idManifestacije, new ArrayList<Komentar>());
 		komentari.get(idManifestacije).add(komentar);
 		sacuvajKomentar(komentar);
 		return komentar;

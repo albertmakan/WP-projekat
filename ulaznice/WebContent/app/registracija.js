@@ -1,12 +1,13 @@
 Vue.component("registracija", {
 	data: function() {
 		return {
-			korisnik: {}
+			korisnik: {},
+			admin: false
 		}
 	},
 	template: ` 
 <div>
-	<h2>Registrujte se</h2>
+	<h2>{{admin? "Registracija prodavca":"Registrujte se"}}</h2>
 	<div class="forma">
 	<form id="regForm">
 		<table>
@@ -57,21 +58,34 @@ Vue.component("registracija", {
 				korisnickoIme: korisnik.korisnickoIme, lozinka: korisnik.lozinka, pol: korisnik.pol,
 				ime: korisnik.ime, prezime: korisnik.prezime, datumRodjenja: new Date(korisnik.datumRodjenja).getTime()
 			};
-			axios
-				.post("/registracija", k)
-				.then(response => {
-				if (response.data == "OK") {
-					alert("Uspesna registracija")
-					window.location.href = "#/";
-					document.getElementById("korisnik_link").innerHTML = "<a href='#/profil'>"+korisnik.korisnickoIme+"</a>"+
-																		"<a href='javascript:logout()'>Odjava</a>";
-				} else {
-					toast(response.data);
-				}
-			});
+			if (this.admin)
+				axios
+					.post("/korisnici/registracijaProdavca", k)
+					.then(response => {
+						if (response.data == "OK") {
+							alert("Uspesna registracija prodavca");
+							this.korisnik = {};
+							window.location.href = "#/registracija";
+						} else {
+							toast(response.data);
+						}
+					});
+			else
+				axios
+					.post("/registracija", k)
+					.then(response => {
+						if (response.data == "OK") {
+							alert("Uspesna registracija")
+							this.$root.$emit('login', response.data);
+						} else {
+							toast(response.data);
+						}
+					});
 		},
 	},
 	mounted() {
-
+		axios
+			.get("/trenutniKorisnik")
+			.then(response => {this.admin = response.data.uloga==='ADMIN';});
 	}
 });

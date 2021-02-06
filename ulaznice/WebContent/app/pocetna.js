@@ -6,7 +6,7 @@ Vue.component("pocetna", {
 			tipovi: [],
 			parametri: {},
 			naziv: "",
-			krit: "", smer: "1",
+			krit: "datumVreme", smer: "1",
 			izabraniTipovi: [],
 			nerasprodate: false,
 			filtrirane:[]
@@ -50,7 +50,7 @@ Vue.component("pocetna", {
 		</div>
 	</div>
 	<div v-for="m in sortirane" class="manifestacija-mali" :id="m.id">
-		<a :href="'#/manifestacija/'+m.id">
+		<a :href="'#/manifestacija/'+m.id" target="_blank">
 			<img class="poster-mali" :src="'data/posteri/'+m.id+'.png'"
 			onerror="this.onerror=null; this.src='data/posteri/noposter.jpg'" alt="Poster" width="250px" height="150px" />
 		</a>
@@ -117,7 +117,10 @@ Vue.component("pocetna", {
 	mounted() {
 		axios
 			.get("/manifestacije/")
-			.then(response => { this.manifestacije = response.data; this.filtriraj();});
+			.then(response => {
+				this.manifestacije = response.data;
+				this.filtriraj();
+			});
 		axios
 			.get("/manifestacije/mesta")
 			.then(response => {

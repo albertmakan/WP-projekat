@@ -19,7 +19,7 @@ public class Stavka {
 		cena = m.getCenaKarte();
 		if (tipKarte == TipKarte.FAN_PIT) cena *= 2;
 		else if (tipKarte == TipKarte.VIP) cena *= 4;
-		cena -= k.getTip().getPopust()*cena;
+		cena -= k.getTip().getPopust()/100.0*cena;
 		this.tipKarte = tipKarte;
 		this.komada = komada;
 	}
