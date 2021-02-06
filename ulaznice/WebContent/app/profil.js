@@ -157,10 +157,9 @@ Vue.component("profil", {
 					else if (this.korisnik.uloga == "PRODAVAC")
 						this.prikazManifestacija();
 				});
-			if (this.korisnik.uloga == "KUPAC")
-				axios
-					.get("/korpa")
-					.then(response => { this.korpa = response.data; })
+			axios
+				.get("/korpa")
+				.then(response => { this.korpa = response.data; })
 		},
 		dateFormat: function(value, format) {
 			return moment(value).format(format);

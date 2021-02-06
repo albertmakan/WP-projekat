@@ -136,10 +136,9 @@ public class SparkUlazniceMain {
 			return gson.toJson(korisnikDAO.promenaPodataka(noviPodaci));
 		});
 
-		get("/korisnici/sumnjivi", (req, res) -> {
+		get("/korisnici/sumnjivi/", (req, res) -> {
 			res.type("application/json");
-			// TODO
-			return null;
+			return filteredGson.toJson(korisnikDAO.getSumnjviKorisnici());
 		});
 
 		put("/korisnici/blokiranje", (req, res) -> {
@@ -321,6 +320,13 @@ public class SparkUlazniceMain {
 			Karta karta = kartaDAO.odustanak(kupac, k.getId());
 			korisnikDAO.azurirajTipKupca(kupac);
 			korisnikDAO.sacuvajKorisnika(kupac);
+			int o = 0;
+			for (Karta kk : kartaDAO.getKarte(kupac))
+				if (kk.isOdustanak()) o++;
+			if (o>5) {
+				korisnikDAO.addSumnjvi(kupac.getKorisnickoIme());
+				korisnikDAO.sacuvajSumnjive();
+			}
 			return gson.toJson(karta);
 		});
 		

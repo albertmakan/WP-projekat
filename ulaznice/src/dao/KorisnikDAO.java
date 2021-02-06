@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import com.google.gson.Gson;
 
@@ -20,6 +21,7 @@ import beans.TipKupca;
 
 public class KorisnikDAO {
 	private HashMap<String, Uloga> ulogeKorisnika;
+	private ArrayList<String> sumnjvi;
 	private HashMap<String, Korisnik> korisnici;
 	private String putanjaFoldera;
 	private TipKupca[] tipovi = {
@@ -60,6 +62,8 @@ public class KorisnikDAO {
 					break;
 				}
 			}
+			sumnjvi = gson.fromJson(new FileReader(putanjaFoldera+"/sumnjiviKorisnici.json"), new ArrayList<String>(){
+				private static final long serialVersionUID = 1L;}.getClass().getGenericSuperclass());
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -126,6 +130,19 @@ public class KorisnikDAO {
 			pw.close();
 	}
 	
+	public void sacuvajSumnjive() {
+		Gson gson = new Gson();
+		PrintWriter pw = null;
+		try {
+			pw = new PrintWriter(putanjaFoldera+"/sumnjiviKorisnici.json");
+			pw.write(gson.toJson(sumnjvi));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		if (pw != null)
+			pw.close();
+	}
+	
 	public boolean validnoKorisnickoIme(String korisnickoIme) {
 		if (korisnickoIme == null) return false;
 		if (korisnickoIme.matches("[a-zA-Z0-9._]{4,30}")) {
@@ -183,5 +200,17 @@ public class KorisnikDAO {
 		Korisnik k = getKorisnik(korisnickoIme);
 		k.setBlokiran(true);
 		sacuvajKorisnika(k);
+	}
+
+	public Collection<Korisnik> getSumnjviKorisnici() {
+		HashSet<Korisnik> sumnjiviKorisnici = new HashSet<Korisnik>();
+		for (String ki : sumnjvi) {
+			sumnjiviKorisnici.add(getKorisnik(ki));
+		}
+		return sumnjiviKorisnici;
+	}
+
+	public void addSumnjvi(String sumnjv) {
+		sumnjvi.add(sumnjv);
 	}
 }

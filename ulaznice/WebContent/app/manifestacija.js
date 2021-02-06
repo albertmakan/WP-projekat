@@ -85,9 +85,10 @@ Vue.component("manifestacija", {
 	
 	<div class="komentari">
 		<h3>Komentari ({{this.komentari.length}})</h3>
-		<button v-if="korisnik.uloga=='PRODAVAC'" v-on:click="odobriKomentar()">Odobri komentar</button>
+		<button v-if="korisnik.uloga=='PRODAVAC' && izabranKoment.kupac" v-on:click="odobriKomentar()">Odobri komentar</button>
 		<div style="max-height:300px;overflow:scroll;">
-			<div class="komentar" v-for="kom in komentari" @click="izabranKoment=kom">
+			<div class="komentar" v-for="kom in komentari" @click="izabranKoment=kom"
+			 :class="{selected: izabranKoment.kupac===kom.kupac && izabranKoment.tekst===kom.tekst}">
 				<i>{{kom.kupac}}</i><br>
 				{{kom.tekst}}<br>
 				Ocena: {{kom.ocena}}
@@ -165,7 +166,8 @@ Vue.component("manifestacija", {
 			axios
 				.put("/manifestacije/odobriKomentar", this.izabranKoment)
 				.then(response => {
-					toast("komentar je odobren")
+					toast("komentar je odobren");
+					this.izabranKoment = {}
 				})
 		}
 	},

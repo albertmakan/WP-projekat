@@ -93,7 +93,7 @@ public class KartaDAO {
 	
 	// posle poziva ove metode potrebno je sacuvati kupca i manifestacije
 	public void rezervacijaKarata(Kupac kupac, Manifestacija manifestacija, TipKarte tip, int kom) {
-		int len = (""+manifestacija.getBrojMesta()).length();
+		//int len = (""+manifestacija.getBrojMesta()).length();
 		float cena = manifestacija.getCenaKarte();
 		if (tip == TipKarte.FAN_PIT)
 			cena *= 2;
@@ -101,8 +101,9 @@ public class KartaDAO {
 			cena *= 4;
 		cena -= kupac.getTip().getPopust()/100.0*cena;
 		for (int i = 0; i < kom; i++) {
-			String id = manifestacija.getNaziv().substring(0, 10-len).toUpperCase().replace(' ', '_')
-					+ String.format("%0"+len+"d", manifestacija.getBrojMesta()-manifestacija.getBrojKarata());
+			//String id = manifestacija.getNaziv().substring(0, 10-len).toUpperCase().replace(' ', '_')
+			//		+ String.format("%0"+len+"d", manifestacija.getBrojMesta()-manifestacija.getBrojKarata());
+			String id = String.format("%010d", karte.size());
 			Karta karta = new Karta(id, manifestacija, cena, kupac.getIme()+" "+kupac.getPrezime(), tip);
 			karte.put(karta.getId(), karta);
 			kupac.addKarta(karta.getId());

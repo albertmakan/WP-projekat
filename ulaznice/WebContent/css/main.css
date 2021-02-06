@@ -183,7 +183,7 @@ table.info>tr>td {
 	 cursor: pointer;
 }
 
-tr.selected {
+.selected {
 	 background-color: #aaaaaa;
 }
 
@@ -191,6 +191,11 @@ tr.selected {
 	border: 1px solid gray;
 	padding: 5px;
 	cursor: pointer;
+}
+
+.komentar:hover {
+	background-color: #ffff99;
+	 cursor: pointer;
 }
 
 .rezervacija {

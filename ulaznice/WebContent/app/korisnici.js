@@ -96,8 +96,8 @@ Vue.component("korisnici", {
 		},
 		sumnjivi: function() {
 			axios
-				.get("/korisnici/sumnjivi")
-				.then(response => {toast("Not implemented")})
+				.get("/korisnici/sumnjivi/")
+				.then(response => {this.korisnici = response.data; this.filtriraj(); console.log(response.data)})
 		}
 	},
 	computed: {
